@@ -62,7 +62,7 @@ const UpdateMenu = () => {
   return (
     <div className="w-full md:w-[870px] mx-auto px-4">
       <h2 className="text-2xl font-semibold my-4">
-        Update <span className="text-green">Menu Item</span>
+        Update <span className="text-orange">Menu Item</span>
       </h2>
       <div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -93,12 +93,12 @@ const UpdateMenu = () => {
                 <option disabled value="default">
                   Select a category
                 </option>
-                <option value="salad">Salad</option>
-                <option value="pizza">Pizza</option>
-                <option value="soup">Soup</option>
-                <option value="dessert">Dessert</option>
-                <option value="drinks">Drinks</option>
-                <option value="popular">popular</option>
+                <option value="Fel I">Fel I</option>
+                <option value="Fel II">Fel II</option>
+                <option value="Meniul Zilei">Meniul Zilei</option>
+                <option value="Salata">Salata</option>
+                <option value="Sandvis">Sandvis</option>
+                <option value="Desert">Desert</option>
               </select>
             </div>
 
@@ -137,7 +137,7 @@ const UpdateMenu = () => {
             />
           </div>
 
-          <button className="btn bg-green text-white px-6">
+          <button className="btn bg-orange text-white px-6">
             Update Item <FaUtensils></FaUtensils>
           </button>
         </form>

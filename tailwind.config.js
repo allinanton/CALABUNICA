@@ -8,10 +8,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        "green": "#39DB4A",
-        "red": "#FF6868",
+        "orange": "#ff3c0c",
+        "red": "#ff7f66",
         "secondary": "#555",
         "prigmayBG": "#FCFCFC"
+      },
+      fontFamily:{
+        "primary" : ['Dancing Script', 'serif']
       }
     },
   },

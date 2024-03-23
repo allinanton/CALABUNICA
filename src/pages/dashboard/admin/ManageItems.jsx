@@ -7,13 +7,13 @@ import Swal from "sweetalert2";
 
 const ManageItems = () => {
   const [menu, , refetch] = useMenu();
-//   console.log(menu)
+  //   console.log(menu)
   const axiosSecure = useAxiosSecure();
 
-//   pagination
-const [currentPage, setCurrentPage] = useState(1);
-const items_Per_Page =  10;
-const indexOfLastItem = currentPage * items_Per_Page;
+  //   pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const items_Per_Page = 10;
+  const indexOfLastItem = currentPage * items_Per_Page;
   const indexOfFirstItem = indexOfLastItem - items_Per_Page;
   const currentItems = menu.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -21,34 +21,34 @@ const indexOfLastItem = currentPage * items_Per_Page;
   const handleDeleteItem = (item) => {
     console.log(item._id)
     Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
     }).then(async (result) => {
-        if (result.isConfirmed) {
-            const res = await axiosSecure.delete(`/menu/${item._id}`);
-            // console.log(res.data);
-            refetch();
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: `${item.name} has been deleted`,
-                    showConfirmButton: false,
-                    timer: 1500
-            });
+      if (result.isConfirmed) {
+        const res = await axiosSecure.delete(`/menu/${item._id}`);
+        // console.log(res.data);
+        refetch();
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `${item.name} has been deleted`,
+          showConfirmButton: false,
+          timer: 1500
+        });
 
-        }
+      }
     });
-}
+  }
 
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
       <h2 className="text-2xl font-semibold my-4">
-        Manage All <span className="text-green">Menu Items!</span>
+        Manage All <span className="text-orange">Menu Items!</span>
       </h2>
 
       {/* menu items table  */}
@@ -83,12 +83,12 @@ const indexOfLastItem = currentPage * items_Per_Page;
                     </div>
                   </td>
                   <td>{item.name}</td>
-                  <td>${item.price}</td>
+                  <td>{item.price}Lei</td>
                   <td>
                     <Link to={`/dashboard/update-menu/${item._id}`}>
-                      <button className="btn btn-ghost btn-xs bg-orange-500">
+                      <button className="btn btn-ghost btn-xs ">
                         <FaEdit
-                          className="text-white 
+                          className="text-orange 
                                         "
                         ></FaEdit>
                       </button>
@@ -111,21 +111,21 @@ const indexOfLastItem = currentPage * items_Per_Page;
 
       {/* Pagination */}
       <div className="flex justify-center my-4">
-          <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="btn btn-sm mr-2 btn-warning"
-          >
-            <FaArrowLeft/> Previous 
-          </button>
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={indexOfLastItem >= menu.length}
-            className="btn btn-sm bg-green text-white"
-          >
-            Next  <FaArrowRight/>
-          </button>
-        </div>
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="btn btn-sm mr-2 btn-warning"
+        >
+          <FaArrowLeft /> Previous
+        </button>
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={indexOfLastItem >= menu.length}
+          className="btn btn-sm bg-orange text-white"
+        >
+          Next  <FaArrowRight />
+        </button>
+      </div>
     </div>
   );
 };

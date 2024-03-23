@@ -100,7 +100,7 @@ const Users = () => {
                       onClick={() => handleDeleteUser(user)}
                       className="btn bg-orange-500 btn-xs"
                     >
-                      <FaTrashAlt className="text-white" />
+                      <FaTrashAlt className="text-orange" />
                     </button>
                   </td>
                 </tr>
