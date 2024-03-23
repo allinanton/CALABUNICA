@@ -6,13 +6,11 @@ import { AuthContext } from "../contexts/AuthProvider";
 import Profile from "./Profile";
 import { Link } from "react-router-dom";
 import useCart from "../hooks/useCart";
-import { useTheme } from "../hooks/ThemeContext";
 
 const Navbar = () => {
   const [isSticky, setSticky] = useState(false);
-  const {user, loading} = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   const [cart, refetch] = useCart();
-  const { isDarkMode } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -39,59 +37,40 @@ const Navbar = () => {
   const navItems = (
     <>
       <li>
-        <a href="/" className={`text-${isDarkMode ? 'dark' : ''}`}>
-          Home
+        <a href="/" className={`text-2xl`}>
+          Acasa
+        </a>
+      </li>
+      <li>
+        <a href="/menu" className={`text-2xl`}>
+          Meniu
         </a>
       </li>
       <li tabIndex={0}>
         <details>
-          <summary className={`text-${isDarkMode ? 'dark' : ''}`}>Menu</summary>
-          <ul className={`p-2 ${isDarkMode ? 'dark' : ''}`}>
+          <summary className={`text-2xl`}>Servicii</summary>
+          <ul className={`p-2`}>
             <li>
-              <a href="/menu" className={`text-${isDarkMode ? 'dark' : ''}`}>
-                All
-              </a>
+              <a className={`text`}>Mâncare la Oală</a>
             </li>
             <li>
-              <a className={`text-${isDarkMode ? 'dark' : ''}`}>Salad</a>
+              <a className={`text`}>Organizare Evenimente</a>
             </li>
             <li>
-              <a className={`text-${isDarkMode ? 'dark' : 'dark'}`}>Pizza</a>
+              <a className={`text`}>Catering Evenimente</a>
             </li>
           </ul>
         </details>
-      </li>
-      <li tabIndex={0}>
-        <details>
-          <summary className={`text-${isDarkMode ? 'dark' : ''}`}>Services</summary>
-          <ul className={`p-2 ${isDarkMode ? 'dark' : ''}`}>
-            <li>
-              <a className={`text-${isDarkMode ? 'text-white' : 'black'}`}>Online Order</a>
-            </li>
-            <li>
-              <a className={`text-${isDarkMode ? 'white' : 'black'}`}>Table Booking</a>
-            </li>
-            <li>
-              <a className={`text-${isDarkMode ? 'white' : 'black'}`}>Order Tracking</a>
-            </li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <a className={`text-${isDarkMode ? 'white' : 'black'}`}>Offers</a>
       </li>
     </>
   );
   return (
     <header
-      className={`max-w-screen-2xl container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out ${isDarkMode ? "dark" : ""}`}
+      className={`bg-gradient-to-r from-orange from-10% max-w-screen-2xl container mx-auto fixed top-0 left-0 right-0 transition-all duration-1000 ease-in-out rounded-lg`}
     >
       <div
-        className={`navbar xl:px-24 ${
-          isSticky
-            ? "shadow-md bg-base-100 transition-all duration-300 ease-in-out text-black"
-            : ""
-        }`}
+        className={`navbar xl:px-24 ${isSticky ? "shadow-md bg-orange-400 transition-all duration-1000 ease-in-out text-black rounded-lg"
+          : "bg-gradient-to-r from-orange-400 to-orange-100 via-orange-400 transition-all duration-1000 ease-in-out rounded-lg"}`}
       >
         <div className="navbar-start">
           <div className="dropdown justify-between">
@@ -113,73 +92,58 @@ const Navbar = () => {
             </label>
             <ul
               tabIndex={0}
-              className={`menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-64 space-y-3 ${isDarkMode ? 'dark' : ''}`}
+              className={`menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-64 space-y-3  `}
               style={{ display: isMenuOpen ? "block" : "none" }}
             >
               {navItems}
             </ul>
           </div>
           <a href="/">
-            <img src={logo} alt="" />
+            <img src={logo} alt="" className="w-24 h-24 rounded-full" />
           </a>
+
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{navItems}</ul>
         </div>
         <div className="navbar-end ">
-          <button className="btn btn-ghost btn-circle hidden lg:flex">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+
+          {/* shopping cart */}
+          <Link to="/cart-page">
+            <label
+              tabIndex={0}
+              className="btn btn-ghost btn-circle  lg:flex items-center justify-center mr-3"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-         
-         {/* shopping cart */}
-         <Link to="/cart-page">
-         <label
-            tabIndex={0}
-            className="btn btn-ghost btn-circle  lg:flex items-center justify-center mr-3"
-          >
-            <div className="indicator">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <span className="badge badge-sm indicator-item">{cart.length || 0}</span>
-            </div>
-          </label>
-         </Link>
+              <div className="indicator">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                <span className="badge badge-sm indicator-item">{cart.length || 0}</span>
+              </div>
+            </label>
+          </Link>
 
           {/* login button */}
 
-          { 
+          {
             user ? <>
-           <Profile user={user}/>
-          </> : <button onClick={()=>document.getElementById('my_modal_5').showModal()} className="btn flex items-center gap-2 rounded-full px-6 bg-orange text-white">
-            <FaRegUser /> Login
-          </button>
+              <Profile user={user} />
+            </> : <button onClick={() => document.getElementById('my_modal_5').showModal()} className="btn flex items-center gap-2 rounded-full px-6 bg-orange text-white">
+              <FaRegUser /> Login
+            </button>
           }
-          <Modal/>
+          <Modal />
         </div>
       </div>
     </header>

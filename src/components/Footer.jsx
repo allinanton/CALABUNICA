@@ -9,7 +9,7 @@ const Footer = () => {
           isDarkMode ? "dark" : "" // Apply dark mode class
         }`}>
         <aside>
-          <img src="/logo.png" alt="" />
+          <img src="/logo.png" alt="" className="w-32 h-32 rounded-full"/>
           <p className="my-3 md:w-40">
             Savor the artistry where every dish is a culinary masterpiece
           </p>
