@@ -3,12 +3,12 @@ import useCart from "../../hooks/useCart";
 import { AuthContext } from "../../contexts/AuthProvider";
 import Swal from "sweetalert2";
 import { FaTrash } from "react-icons/fa";
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axios from "axios";
 import { useTheme } from "../../hooks/ThemeContext";
 
 const CartPage = () => {
-  const { isDarkMode } = useTheme();
+
   const { user } = useContext(AuthContext);
   const [cart, refetch] = useCart();
   const [cartItems, setCartItems] = useState([]);
@@ -21,7 +21,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncrease = async (item) => {
     try {
-      const response = await fetch(`https://calabunica-server.onrender.com/carts/${item._id}`, {
+      const response = await fetch(`http://localhost:5000/carts/${item._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const CartPage = () => {
     if (item.quantity > 1) {
       try {
         const response = await fetch(
-          `https://calabunica-server.onrender.com/carts/${item._id}`,
+          `http://localhost:5000/carts/${item._id}`,
           {
             method: "PUT",
             headers: {
@@ -94,7 +94,7 @@ const CartPage = () => {
   // console.log(orderTotal)
 
   // delete an item
-  const handleDelete =   (item) => {
+  const handleDelete = (item) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -105,15 +105,15 @@ const CartPage = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`https://calabunica-server.onrender.com/carts/${item._id}`).then(response => {
+        axios.delete(`http://localhost:5000/carts/${item._id}`).then(response => {
           if (response) {
             refetch();
-             Swal.fire("Deleted!", "Your file has been deleted.", "success");
-           }
+            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          }
         })
-        .catch(error => {
-          console.error(error);
-        });
+          .catch(error => {
+            console.error(error);
+          });
       }
     });
   };
@@ -121,12 +121,12 @@ const CartPage = () => {
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
       {/* banner */}
-      <div className={`bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100% ${isDarkMode ? "dark" : ""}`}>
+      <div className={`bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%`}>
         <div className="py-28 flex flex-col items-center justify-center">
           {/* content */}
           <div className=" text-center px-4 space-y-7">
             <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
-              Items Added to The<span className="text-orange"> Cart</span>
+              Produse Adăugate în<span className="text-orange"> Coșul de Cumpărături</span>
             </h2>
           </div>
         </div>
@@ -136,99 +136,96 @@ const CartPage = () => {
 
       {
         (cart.length > 0) ? <div>
-        <div>
-          <div className="overflow-x-auto">
-            <table className="table">
-              {/* head */}
-              <thead className="bg-orange text-white rounded-sm">
-                <tr>
-                  <th>#</th>
-                  <th>Food</th>
-                  <th>Item Name</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cart.map((item, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
-                          <img
-                            src={item.image}
-                            alt="Avatar Tailwind CSS Component"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="font-medium">{item.name}</td>
-                    <td className="flex">
-                      <button
-                        className="btn btn-xs"
-                        onClick={() => handleDecrease(item)}
-                      >
-                        -
-                      </button>
-                      <input
-                        type="number"
-                        value={item.quantity}
-                        onChange={() => console.log(item.quantity)}
-                        className={`w-10 mx-2 text-center overflow-hidden appearance-none ${isDarkMode ? "dark" : ""}`}
-                      />
-                      <button
-                        className="btn btn-xs"
-                        onClick={() => handleIncrease(item)}
-                      >
-                        +
-                      </button>
-                    </td>
-                    <td>${calculateTotalPrice(item).toFixed(2)}</td>
-                    <td>
-                      <button
-                        className="btn btn-sm border-none text-red bg-transparent"
-                        onClick={() => handleDelete(item)}
-                      >
-                        <FaTrash />
-                      </button>
-                    </td>
+          <div>
+            <div className="overflow-x-auto">
+              <table className="table">
+                {/* head */}
+                <thead className="bg-orange text-white rounded-sm">
+                  <tr>
+                    <th>#</th>
+                    <th>Imagine</th>
+                    <th>Numele produsului</th>
+                    <th>Cantitate</th>
+                    <th>Preț</th>
+                    <th>Eliminare</th>
                   </tr>
-                ))}
-              </tbody>
-              {/* foot */}
-            </table>
+                </thead>
+                <tbody>
+                  {cart.map((item, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <div className="avatar">
+                          <div className="mask mask-squircle w-12 h-12">
+                            <img
+                              src={item.image}
+                              alt="Avatar Tailwind CSS Component"
+                            />
+                          </div>
+                        </div>
+                      </td>
+                      <td className="font-medium">{item.name}</td>
+                      <td className="flex">
+                        <button
+                          className="btn btn-xs"
+                          onClick={() => handleDecrease(item)}
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          value={item.quantity}
+                          onChange={() => console.log(item.quantity)}
+                          className={`w-10 mx-2 text-center overflow-hidden appearance-none `}
+                        />
+                        <button
+                          className="btn btn-xs"
+                          onClick={() => handleIncrease(item)}
+                        >
+                          +
+                        </button>
+                      </td>
+                      <td>{calculateTotalPrice(item).toFixed(2)} Lei</td>
+                      <td>
+                        <button
+                          className="btn btn-sm border-none text-red bg-transparent"
+                          onClick={() => handleDelete(item)}
+                        >
+                          <FaTrash />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                {/* foot */}
+              </table>
+            </div>
           </div>
+          <hr />
+          <div className="flex flex-col md:flex-row justify-between items-start my-12 gap-8">
+            <div className="md:w-1/2 space-y-3">
+              <h3 className="text-lg font-semibold">Detalii</h3>
+              <p>Nume: {user?.displayName || "None"}</p>
+              <p>Email: {user?.email}</p>
+            </div>
+            <div className="md:w-1/2 space-y-3">
+              <h3 className="text-lg font-semibold">Detalii Coș</h3>
+              <p>Număr Total Produse: {cart.length}</p>
+              <p>
+                Preț Total:{" "}
+                <span id="total-price">{orderTotal.toFixed(2)} Lei</span>
+              </p>
+              <Link to="/process-checkout" className="btn btn-md bg-orange text-white px-8 py-1">
+                Continuă către finalizarea comenzii
+              </Link>
+            </div>
+          </div>
+        </div> : <div className="text-center mt-20">
+          <p>Coșul este gol. Te rog adaugă produse.</p>
+          <Link to="/menu"><button className="btn bg-orange text-white mt-3">Înapoi la Meniu</button></Link>
         </div>
-        <hr />
-        <div className="flex flex-col md:flex-row justify-between items-start my-12 gap-8">
-          <div className="md:w-1/2 space-y-3">
-            <h3 className="text-lg font-semibold">Customer Details</h3>
-            <p>Name: {user?.displayName || "None"}</p>
-            <p>Email: {user?.email}</p>
-            <p>
-              User_id: <span className="text-sm">{user?.uid}</span>
-            </p>
-          </div>
-          <div className="md:w-1/2 space-y-3">
-            <h3 className="text-lg font-semibold">Shopping Details</h3>
-            <p>Total Items: {cart.length}</p>
-            <p>
-              Total Price:{" "}
-              <span id="total-price">${orderTotal.toFixed(2)}</span>
-            </p>
-            <Link to="/process-checkout" className="btn btn-md bg-orange text-white px-8 py-1">
-              Procceed to Checkout
-            </Link>
-          </div>
-        </div>
-      </div> : <div className="text-center mt-20">
-        <p>Cart is empty. Please add products.</p>
-        <Link to="/menu"><button className="btn bg-orange text-white mt-3">Back to Menu</button></Link>
-      </div>
       }
-      
+
     </div>
   );
 };

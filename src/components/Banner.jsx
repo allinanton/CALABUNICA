@@ -1,12 +1,12 @@
 import React from "react";
 import bannerImg from "/images/home/banner.png";
-import { useTheme } from "../hooks/ThemeContext";
+
 
 const Banner = () => {
-  const { isDarkMode } = useTheme();
+
   return (
     <div className={`max-w-screen-2xl container mx-auto xl:px-24 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%  `}>
-      <div className={`py-24 flex flex-col md:flex-row-reverse items-center justify-between gap-8 ${isDarkMode ? 'text-white' : ''}`}>
+      <div className={`py-24 flex flex-col md:flex-row-reverse items-center justify-between gap-8 `}>
 
         {/* img */}
         <div className="md:w-1/2">

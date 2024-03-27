@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaFacebookF, FaGithub, FaGoogle } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../contexts/AuthProvider";
 import useAxiosPublic from "../hooks/useAxiosPublic";
@@ -160,12 +160,6 @@ const Modal = () => {
               className="btn btn-circle hover:bg-orange hover:text-white"
             >
               <FaGoogle />
-            </button>
-            <button className="btn btn-circle hover:bg-orange hover:text-white">
-              <FaFacebookF />
-            </button>
-            <button className="btn btn-circle hover:bg-orange hover:text-white">
-              <FaGithub />
             </button>
           </div>
         </div>

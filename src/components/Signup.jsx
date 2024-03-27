@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaFacebookF, FaGithub, FaGoogle, FaRegUser } from "react-icons/fa";
+import { FaGoogle} from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import Modal from "./Modal";
 import { AuthContext } from "../contexts/AuthProvider";
@@ -148,12 +148,6 @@ const Signup = () => {
             className="btn btn-circle hover:bg-orange hover:text-white"
           >
             <FaGoogle />
-          </button>
-          <button className="btn btn-circle hover:bg-orange hover:text-white">
-            <FaFacebookF />
-          </button>
-          <button className="btn btn-circle hover:bg-orange hover:text-white">
-            <FaGithub />
           </button>
         </div>
       </div>

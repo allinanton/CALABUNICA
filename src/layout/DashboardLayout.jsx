@@ -86,7 +86,7 @@ const DashboardLayout = () => {
             {/* Sidebar content here */}
             <li>
               <Link to="/dashboard" className="flex justify-start mb-3">
-                <img src={logo} alt="" className="w-20" />
+                <img src={logo} alt="" className="w-20 rounded-full" />
                 <span className="indicator-item badge badge-primary">
                   Admin
                 </span>

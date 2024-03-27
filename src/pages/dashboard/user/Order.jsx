@@ -11,7 +11,7 @@ const Order = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `https://calabunica-server.onrender.com/payments?email=${user?.email}`,
+        `http://localhost:5000/payments?email=${user?.email}`,
         {
           headers: {
             authorization: `Bearer ${token}`,

@@ -29,7 +29,7 @@ const Profile = ({ user }) => {
             htmlFor="my-drawer-4"
             className="drawer-button btn btn-ghost btn-circle avatar"
           >
-            <div className="w-10 rounded-full">
+            <div className="w-30 rounded-full">
               {user.photoURL? <img alt="" src={user.photoURL} /> : <img alt="" src={avatarImg} />}
               
             </div>
@@ -44,16 +44,16 @@ const Profile = ({ user }) => {
           <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
             {/* Sidebar content here */}
             <li>
-              <a href="/update-profile">Profile</a>
+              <a href="/update-profile">Profil</a>
             </li>
             <li>
-              <a href="/order">Order</a>
+              <a href="/order">Comenzi</a>
             </li>
             <li>
-              <a>Settings</a>
+              <a>Setări</a>
             </li>
             <li>
-              <a href="/dashboard">Dashboard</a>
+              <a href="/dashboard">Tablou de instrumente</a>
             </li>
             <li>
               <a onClick={handleLogout}>Logout</a>

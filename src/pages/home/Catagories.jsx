@@ -6,8 +6,8 @@ const categoryItems = [
     { id: 2, title: "Fel II", image: "/images/home/category/img2.png" },
     { id: 3, title: "Meniul Zilei", image: "/images/home/category/img3.png" },
     { id: 4, title: "Salata", image: "/images/home/category/img4.png" },
-    { id: 5, title: "Sandvis", image: "/images/home/category/img4.png" },
-    { id: 6, title: "Desert", image: "/images/home/category/img4.png" }
+    { id: 5, title: "Sandvis", image: "/images/home/category/img5.png" },
+    { id: 6, title: "Desert", image: "/images/home/category/img6.png" }
 ]
 
 const Catagories = () => {
