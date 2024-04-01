@@ -58,9 +58,8 @@ const Users = () => {
 
   return (
     <div>
-      <div className="flex justify-between mx-4 my-4">
-        <h2 className="text-2xl">All Users</h2>
-        <h2 className="text-2xl">Total Users: {users.length}</h2>
+      <div className="flex justify-center mx-4 my-4">
+        <h2 className="text-2xl">Număr de Utilizatori: {users.length}</h2>
       </div>
 
       {/* table */}
@@ -68,13 +67,13 @@ const Users = () => {
       <div className="overflow-x-auto">
           <table className="table table-zebra md:w-[870px]">
             {/* head */}
-            <thead className="bg-green text-white">
+            <thead className="bg-orange text-white">
               <tr>
                 <th>#</th>
-                <th>Name</th>
+                <th>Nume</th>
                 <th>Email</th>
-                <th>Role</th>
-                <th>Action</th>
+                <th>Rol</th>
+                <th>Șterge</th>
               </tr>
             </thead>
             <tbody>

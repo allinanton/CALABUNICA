@@ -56,13 +56,13 @@ const AddMenu = () => {
   return (
     <div className="w-full md:w-[870px] mx-auto px-4">
       <h2 className="text-2xl font-semibold my-4">
-        Upload A New <span className="text-orange">Menu Item</span>
+        Adaugă un nou <span className="text-orange">Produs</span>
       </h2>
       <div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-control w-full my-6">
             <label className="label">
-              <span className="label-text">Recipe Name*</span>
+              <span className="label-text">Nume Produs*</span>
             </label>
             <input
               type="text"
@@ -76,7 +76,7 @@ const AddMenu = () => {
             {/* category */}
             <div className="form-control w-full my-6">
               <label className="label">
-                <span className="label-text">Category*</span>
+                <span className="label-text">Categorie*</span>
               </label>
               <select
                 defaultValue="default"
@@ -84,7 +84,7 @@ const AddMenu = () => {
                 className="select select-bordered w-full"
               >
                 <option disabled value="default">
-                  Select a category
+                  Selectează o categorie
                   </option>
                 <option value="Fel I">Fel I</option>
                 <option value="Fel II">Fel II</option>
@@ -98,7 +98,7 @@ const AddMenu = () => {
             {/* price */}
             <div className="form-control w-full my-6">
               <label className="label">
-                <span className="label-text">Price*</span>
+                <span className="label-text">Preț*</span>
               </label>
               <input
                 type="number"
@@ -111,7 +111,7 @@ const AddMenu = () => {
           {/* recipe details */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Recipe Details</span>
+              <span className="label-text">Descriere Produs</span>
             </label>
             <textarea
               {...register("recipe")}
@@ -129,7 +129,7 @@ const AddMenu = () => {
           </div>
 
           <button className="btn bg-orange text-white px-6">
-            Add Item <FaUtensils></FaUtensils>
+            Adaugă Produs<FaUtensils></FaUtensils>
           </button>
         </form>
       </div>

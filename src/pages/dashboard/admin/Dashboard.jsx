@@ -19,7 +19,7 @@ const Dashboard = () => {
   return (
     <div className="w-full md:w-[1080px] mx-auto px-4 ">
       <h2 className="text-3xl font-semibold my-4">
-        Hi, {user.displayName}
+        Salut, {user.displayName}
       </h2>
       {/* stats */}
       <div className="stats shadow flex flex-col md:flex-row">
@@ -29,7 +29,7 @@ const Dashboard = () => {
           <div className="stat-figure text-secondary">
             <FaUsers className="text-3xl"></FaUsers>
           </div>
-          <div className="stat-title">Users</div>
+          <div className="stat-title">Utilizatori</div>
           <div className="stat-value">{stats.users}</div>
         </div>
 
@@ -37,7 +37,7 @@ const Dashboard = () => {
           <div className="stat-figure text-secondary">
             <FaBook className="text-3xl"></FaBook>
           </div>
-          <div className="stat-title">Menu Items</div>
+          <div className="stat-title">Produse</div>
           <div className="stat-value">{stats.menuItems}</div>
         </div>
 
@@ -57,7 +57,7 @@ const Dashboard = () => {
               ></path>
             </svg>
           </div>
-          <div className="stat-title">Orders</div>
+          <div className="stat-title">Comenzi</div>
           <div className="stat-value">{stats.orders}</div>
         </div>
       </div>

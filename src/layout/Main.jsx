@@ -5,18 +5,13 @@ import "../../src/App.css";
 import Footer from "../components/Footer";
 import { AuthContext } from "../contexts/AuthProvider";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { useTheme } from "../hooks/ThemeContext";
 
 const Main = () => {
   const { loading } = useContext(AuthContext);
-  const { isDarkMode, toggleTheme } = useTheme(); // Destructure toggleTheme
 
-  // Apply dark mode on initial render
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDarkMode);
-  }, [isDarkMode]);
+
   return (
-    <div className={`bg-${isDarkMode ? "dark" : "primaryBG"}`}>
+    <div className={`bg-primaryBG`}>
       {loading ? (
         <LoadingSpinner />
       ) : (

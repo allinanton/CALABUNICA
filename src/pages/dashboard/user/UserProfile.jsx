@@ -17,7 +17,6 @@ const UserProfile = () => {
             // Profile updated!
             alert("Profile updated successfully")
           }).catch((error) => {
-            // An error occurred
             // ...
           });
       }

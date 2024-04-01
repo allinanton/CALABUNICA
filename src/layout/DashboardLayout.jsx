@@ -1,13 +1,11 @@
-
 import logo from "/logo.png";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { MdDashboard, MdOutlineDashboardCustomize } from "react-icons/md";
 import {
   FaEdit,
   FaHome,
   FaLocationArrow,
   FaPlusCircle,
-  FaQuestionCircle,
   FaRegUser,
   FaShoppingBag,
   FaUsers,
@@ -22,25 +20,19 @@ const sharedMenu = (
     <li className="mt-3">
       <Link to="/">
         <FaHome />
-        Home
+        Acasă
       </Link>
     </li>
     <li>
       <Link to="/menu">
         <FaCartShopping />
-        Menu
+        Meniu
       </Link>
     </li>
     <li>
       <Link to="/menu">
       <FaLocationArrow />
-        Orders Tracking
-      </Link>
-    </li>
-    <li>
-      <Link to="/menu">
-      <FaQuestionCircle />
-        Customer Support
+        Urmarire Comandă
       </Link>
     </li>
   </>
@@ -88,7 +80,7 @@ const DashboardLayout = () => {
               <Link to="/dashboard" className="flex justify-start mb-3">
                 <img src={logo} alt="" className="w-20 rounded-full" />
                 <span className="indicator-item badge badge-primary">
-                  Admin
+                  administrator
                 </span>
               </Link>
             </li>
@@ -97,28 +89,28 @@ const DashboardLayout = () => {
             {/* dashboard */}
             <li className="mt-3">
               <Link to="/dashboard">
-                <MdDashboard /> Dashboard
+                <MdDashboard /> Tablou Principal
               </Link>
             </li>
 
             {/* manage orders */}
             <li>
               <Link to="/dashboard/bookings">
-                <FaShoppingBag /> Manage Bookings
+                <FaShoppingBag /> Vizualizare Comenzi
               </Link>
             </li>
 
             {/* Add Menu Items */}
             <li>
               <Link to="/dashboard/add-menu">
-                <FaPlusCircle /> Add Menu
+                <FaPlusCircle /> Adaugă Produs
               </Link>
             </li>
 
             {/* Manage Menu Items */}
             <li>
               <Link to="/dashboard/manage-items">
-                <FaEdit /> Manage Items
+                <FaEdit /> Produse
               </Link>
             </li>
 
@@ -126,7 +118,7 @@ const DashboardLayout = () => {
             <li className="mb-3">
               <Link to="/dashboard/users">
                 <FaUsers />
-                Users
+                Utilizatori
               </Link>
             </li>
 

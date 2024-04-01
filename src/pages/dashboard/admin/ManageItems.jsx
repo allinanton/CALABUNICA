@@ -48,7 +48,7 @@ const ManageItems = () => {
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
       <h2 className="text-2xl font-semibold my-4">
-        Manage All <span className="text-orange">Menu Items!</span>
+        Toate <span className="text-orange">Produsele!</span>
       </h2>
 
       {/* menu items table  */}
@@ -59,11 +59,11 @@ const ManageItems = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Image</th>
-                <th>Item Name</th>
-                <th>Price</th>
-                <th>Update</th>
-                <th>Delete</th>
+                <th>Imagine</th>
+                <th>Nume Produs</th>
+                <th>Preț</th>
+                <th>Modifică</th>
+                <th>Șterge</th>
               </tr>
             </thead>
             <tbody>
@@ -116,14 +116,14 @@ const ManageItems = () => {
           disabled={currentPage === 1}
           className="btn btn-sm mr-2 btn-warning"
         >
-          <FaArrowLeft /> Previous
+          <FaArrowLeft /> Înainte
         </button>
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
           disabled={indexOfLastItem >= menu.length}
           className="btn btn-sm bg-orange text-white"
         >
-          Next  <FaArrowRight />
+          Înapoi  <FaArrowRight />
         </button>
       </div>
     </div>

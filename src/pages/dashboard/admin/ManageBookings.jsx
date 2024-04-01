@@ -65,7 +65,7 @@ const ManageBookings = () => {
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
       <h2 className="text-2xl font-semibold my-4">
-        Manage All <span className="text-orange">Bookings!</span>
+        Gestionare <span className="text-orange">Comenzi</span>
       </h2>
 
       {/* menu items table  */}
@@ -76,12 +76,12 @@ const ManageBookings = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>User</th>
-                <th>Transition Id</th>
-                <th>Price</th>
+                <th>Utilizator</th>
+                <th>ID Tranzactie</th>
+                <th>Preț</th>
                 <th>Status</th>
-                <th>Confirm Order</th>
-                <th>Delete</th>
+                <th>Finalizare Comanda</th>
+                <th>Șterge</th>
               </tr>
             </thead>
             <tbody>
@@ -92,7 +92,7 @@ const ManageBookings = () => {
                    {item.email}
                   </td>
                   <td>{item.transitionId}</td>
-                  <td>${item.price}</td>
+                  <td>{item.price} Lei</td>
                   <td>
                     {item.status}
                   </td>
@@ -127,14 +127,14 @@ const ManageBookings = () => {
             disabled={currentPage === 1}
             className="btn btn-sm mr-2 btn-warning"
           >
-            <FaArrowLeft/> Previous 
+            <FaArrowLeft/> Înapoi 
           </button>
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={indexOfLastItem >= orders.length}
             className="btn btn-sm bg-orange text-white"
           >
-            Next  <FaArrowRight/>
+            Înainte  <FaArrowRight/>
           </button>
         </div>
     </div>
