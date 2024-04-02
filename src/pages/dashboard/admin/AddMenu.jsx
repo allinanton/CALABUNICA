@@ -86,8 +86,8 @@ const AddMenu = () => {
                 <option disabled value="default">
                   Selectează o categorie
                   </option>
-                <option value="Fel I">Fel I</option>
-                <option value="Fel II">Fel II</option>
+                <option value="Supe/Ciorbe">Supe/Ciorbe</option>
+                <option value="Fel Principal">Fel Principal</option>
                 <option value="Meniul Zilei">Meniul Zilei</option>
                 <option value="Salata">Salata</option>
                 <option value="Sandvis">Sandvis</option>

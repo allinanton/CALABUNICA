@@ -56,7 +56,7 @@ const SpecialDishes = () => {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 3,
-    initialSlide: 1,
+    initialSlide: recipes.length,
     responsive: [
       {
         breakpoint: 1024,

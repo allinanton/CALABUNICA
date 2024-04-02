@@ -90,17 +90,13 @@ const Menu = () => {
         <div className="py-48 flex flex-col items-center justify-center">
           {/* content */}
           <div className=" text-center px-4 space-y-7">
-            <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
-              For the Love of Delicious <span className="text-orange">Food</span>
+            <h2 className="md:text-6xl text-4xl font-bold md:leading-snug leading-snug">
+            Pasiunea pentru Gustul Autentic al <span className="text-orange">Mâncărurilor Tradiționale</span>
             </h2>
             <p className="text-[#4A4A4A]  text-xl md:w-4/5 mx-auto">
-              Come with family & feel the joy of mouthwatering food such as
-              Greek Salad, Lasagne, Butternut Pumpkin, Tokusen Wagyu, Olivas
-              Rellenas and more for a moderate cost
+              Descoperiți delicii autentice care vă vor încânta papilele gustative la fiecare eveniment. Oferim servicii de catering de înaltă calitate pentru a aduce gustul autentic al mâncărurilor tradiționale la ușa dvs.
             </p>
-            <button className="bg-orange font-semibold btn text-white px-8 py-3 rounded-full">
-              Order Now
-            </button>
+
           </div>
         </div>
       </div>
@@ -118,16 +114,16 @@ const Menu = () => {
               All
             </button>
             <button
-              onClick={() => filterItems("Fel I")}
-              className={selectedCategory === "Fel I" ? "active" : ""}
+              onClick={() => filterItems("Supe/Ciorbe")}
+              className={selectedCategory === "Supe/Ciorbe" ? "active" : ""}
             >
-              Fel I
+              Supe/Ciorbe
             </button>
             <button
-              onClick={() => filterItems("Fel II")}
-              className={selectedCategory === "Fel II" ? "active" : ""}
+              onClick={() => filterItems("Fel Principal")}
+              className={selectedCategory === "Fel Principal" ? "active" : ""}
             >
-              Fel II
+              Fel Principal
             </button>
             <button
               onClick={() => filterItems("Meniul Zilei")}
