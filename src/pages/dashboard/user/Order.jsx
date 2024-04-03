@@ -11,7 +11,7 @@ const Order = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:5000/payments?email=${user?.email}`,
+        `https://calabunica-server.onrender.com/payments?email=${user?.email}`,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -27,8 +27,14 @@ const Order = () => {
   // date format
   const formatDate = (createdAt) => {
     const createdAtDate = new Date(createdAt);
-    return createdAtDate.toLocaleDateString(); // You can adjust options as needed
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    };
+    return createdAtDate.toLocaleDateString('en-GB', options);
   };
+
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
       {/* banner */}
@@ -37,7 +43,7 @@ const Order = () => {
           {/* content */}
           <div className=" text-center px-4 space-y-7">
             <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
-              Track Your All<span className="text-orange"> Orders</span>
+              Urmăriți-vă toate<span className="text-orange"> Comenzile</span>
             </h2>
           </div>
         </div>
@@ -54,11 +60,11 @@ const Order = () => {
                   <thead className="bg-orange text-white rounded-sm">
                     <tr>
                       <th>#</th>
-                      <th>Order Date</th>
-                      <th>transitionId</th>
-                      <th>Price</th>
+                      <th>Data Comenzii</th>
+                      <th>Adresa</th>
+                      <th>Preț</th>
                       <th>Status</th>
-                      <th>Action</th>
+                      <th>Acțiune</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -66,12 +72,12 @@ const Order = () => {
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td>{formatDate(item.createdAt)}</td>
-                        <td className="font-medium">{item.transitionId}</td>
-                        <td>${item.price}</td>
+                        <td className="font-medium">{item.address}</td>
+                        <td>{item.price} Lei</td>
                         <td>{item.status}</td>
                         <td>
                           <button className="btn btn-sm border-none text-orange-400 bg-transparent">
-                            Contact
+                            Urmăriți Comanda
                           </button>
                         </td>
                       </tr>

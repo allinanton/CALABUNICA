@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 import { FaTrash } from "react-icons/fa";
 import { Link } from 'react-router-dom'
 import axios from "axios";
-import { useTheme } from "../../hooks/ThemeContext";
 
 const CartPage = () => {
 
@@ -21,7 +20,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncrease = async (item) => {
     try {
-      const response = await fetch(`http://localhost:5000/carts/${item._id}`, {
+      const response = await fetch(`https://calabunica-server.onrender.com/carts/${item._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +52,7 @@ const CartPage = () => {
     if (item.quantity > 1) {
       try {
         const response = await fetch(
-          `http://localhost:5000/carts/${item._id}`,
+          `https://calabunica-server.onrender.com/carts/${item._id}`,
           {
             method: "PUT",
             headers: {
@@ -84,6 +83,10 @@ const CartPage = () => {
     }
   };
 
+ // Calculate the total quantity of products in the cart
+ const totalQuantity = cart.reduce((total, item) => {
+  return total + item.quantity;
+}, 0);
   // Calculate the cart subtotal
   const cartSubtotal = cart.reduce((total, item) => {
     return total + calculateTotalPrice(item);
@@ -105,7 +108,7 @@ const CartPage = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:5000/carts/${item._id}`).then(response => {
+        axios.delete(`https://calabunica-server.onrender.com/carts/${item._id}`).then(response => {
           if (response) {
             refetch();
             Swal.fire("Deleted!", "Your file has been deleted.", "success");
@@ -164,7 +167,7 @@ const CartPage = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="font-medium">{item.name}</td>
+                      <td className="font-medium font-size">{item.name}</td>
                       <td className="flex">
                         <button
                           className="btn btn-xs"
@@ -210,7 +213,7 @@ const CartPage = () => {
             </div>
             <div className="md:w-1/2 space-y-3">
               <h3 className="text-lg font-semibold">Detalii Coș</h3>
-              <p>Număr Total Produse: {cart.length}</p>
+              <p>Număr Total Produse: {totalQuantity}</p>
               <p>
                 Preț Total:{" "}
                 <span id="total-price">{orderTotal.toFixed(2)} Lei</span>

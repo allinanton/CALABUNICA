@@ -39,7 +39,7 @@ const SpecialDishes = () => {
     // Fetch data from the backend
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/menu");
+        const response = await fetch("https://calabunica-server.onrender.com/menu");
         const data = await response.json();
         setRecipes(data);
       } catch (error) {

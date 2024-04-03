@@ -20,9 +20,8 @@ const Cards = ({ item }) => {
     if(user && user.email){
         const cartItem = {menuItemId: _id, name, quantity : 1, image, price, email: user.email}
 
-        axios.post('http://localhost:5000/carts', cartItem)
+        axios.post('https://calabunica-server.onrender.com/carts', cartItem)
         .then((response) => {
-          console.log(response);
           if(response){
             refetch(); // refetch cart
               Swal.fire({
@@ -76,7 +75,7 @@ const Cards = ({ item }) => {
           <h5 className="font-semibold">
             {item.price}  <span className="text-sm text-red">Lei </span>
           </h5>
-          <button onClick={() => handleAddToCart(item)} className="btn bg-orange text-white">Adaugă în Coș </button>
+          <button onClick={() => handleAddToCart(item)} className="btn bg-orange text-white">Adaugă în Coș</button>
         </div>
       </div>
     </div>

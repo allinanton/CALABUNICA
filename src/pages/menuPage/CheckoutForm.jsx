@@ -1,155 +1,121 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import {  FaPaypal } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
-import { useTheme } from "../../hooks/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
-const CheckoutForm = ({price, cart}) => {
-  const { isDarkMode } = useTheme();
-  const stripe = useStripe();
-  const elements = useElements();
-  const [cardError, setcardError] = useState('');
-  const [clientSecret, setClientSecret] = useState("");
-
+const CheckoutForm = ({ price, cart }) => {
   const axiosSecure = useAxiosSecure();
-  const {user} = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const [location, setLocation] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [locationString, setLocationString] = useState(null);
 
-  console.log(user.email)
+  const totalQuantity = cart.reduce((total, item) => {
+    return total + item.quantity;
+  }, 0);
 
   useEffect(() => {
-    if (typeof price !== 'number' || price < 1) {
-      console.error('Invalid price value. Must be a number greater than or equal to 1.');
-      return;
-    }
-  
-    axiosSecure.post('/create-payment-intent', { price })
-      .then(res => {
-        console.log(res.data.clientSecret);
-        console.log(price);
-        setClientSecret(res.data.clientSecret);
-      })
-  }, [price, axiosSecure]);
+    // Get device location when component mounts
+    getLocation();
+  }, []);
 
-  // handleSubmit btn click
-  const handleSubmit = async (event) => {
-    // Block native form submission.
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      return;
-    }
-
-    const card = elements.getElement(CardElement);
-
-    if (card == null) {
-      return;
-    }
-
-    // console.log('card: ', card)
-    const {error, paymentMethod} = await stripe.createPaymentMethod({
-      type: 'card',
-      card,
-    });
-
-    if (error) {
-      console.log('[error]', error);
-      setcardError(error.message);
-    } else {
-      // setcardError('Success!');
-      // console.log('[PaymentMethod]', paymentMethod);
-    }
-
-    const {paymentIntent, error:confirmError} = await stripe.confirmCardPayment(
-      clientSecret,
-      {
-        payment_method: {
-          card: card,
-          billing_details: {
-            name: user?.displayName || 'anonymous',
-            email: user?.email || 'unknown'
-          },
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // Set location to latitude and longitude
+          setLocation({ latitude, longitude });
+          // Fetch address from latitude and longitude
+          getAddressFromLatLng(latitude, longitude);
+          // Combine latitude and longitude into a single string separated by comma
+          setLocationString(`${latitude},${longitude}`);
         },
-      },
-    );
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
 
-    if(confirmError){
-      console.log(confirmError)
+  const getAddressFromLatLng = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=0`
+      );
+      const data = await response.json();
+      if (data.display_name) {
+        setAddress(data.display_name);
+      }
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
+
+  const handleSubmitOrder = async () => {
+    // Check if location and address are available
+    if (!location || !address) {
+      console.error("Location or address not available.");
+      return;
     }
 
-    console.log('paymentIntent', paymentIntent)
+    // Save order info to server
+    const orderInfo = {
+      email: user.email,
+      price,
+      quantity: cart.length,
+      status: "order pending",
+      itemsName: cart.map((item) => item.name),
+      cartItems: cart.map((item) => item._id),
+      menuItems: cart.map((item) => item.menuItemId),
+      // Send both the human-readable address and the combined latitude and longitude string to the server
+      address: address,
+      latlong: locationString,
+    };
 
-    if(paymentIntent.status ==="succeeded") {
-      const transitionId =paymentIntent.id;
-      setcardError(`Your transitionId is: ${transitionId}`)
-
-      // save payment info to server
-      const paymentInfo ={email: user.email, transitionId: paymentIntent.id, price, quantity: cart.length,
-        status: "order pending", itemsName: cart.map(item => item.name), cartItems: cart.map(item => item._id), menuItems: cart.map(item => item.menuItemId)}
-
-      // send payment info
-      axiosSecure.post('/payments', paymentInfo)
-      .then( res => {
-        console.log(res.data)
-        if(res.data){
-          alert('Payment info sent successfully!')
-          navigate('/order')
+    // Send order info
+    axiosSecure
+      .post("/payments", orderInfo)
+      .then((res) => {
+        if (res.data) {
+          alert("Order submitted successfully!");
+          navigate("/order");
         }
       })
-    }
-
-
+      .catch((error) => {
+        console.error("Error submitting order:", error);
+        // Handle error if needed
+      });
   };
+
+  // Conditional rendering based on cart items
+  if (cart.length === 0) {
+    return <div>No items in the cart.</div>;
+  }
+
   return (
-    <div className="flex flex-col sm:flex-row justify-start items-start gap-8">
+    <div className="flex flex-col sm:flex-row justify-start items-start gap-20">
       <div className="md:w-1/2 space-y-3">
-        <h4 className="text-lg font-semibold">Order Summary</h4>
-        <p>Total Price: ${price}</p>
-        <p>Number of Items: {cart.length}</p>
+        <h4 className="text-lg font-semibold">Finalizare Comandă</h4>
+        <p>Total Comandă: {price} Lei</p>
+        <p>Număr produse: {totalQuantity}</p>
       </div>
       <div className={`md:w-1/3 w-full border space-y-5  card shrink-0 max-w-sm shadow-2xl bg-base-100 px-4 py-8  `}>
-        <h4 className="text-lg font-semibold">Process your Payment!</h4>
-        <h5 className="font-medium">Credit/Debit Card</h5>
-        <form onSubmit={handleSubmit}>
-        <CardElement
-          options={{
-            style: {
-              base: {
-                fontSize: "16px",
-                color: "#424770",
-                "::placeholder": {
-                  color: "#aab7c4",
-                },
-              },
-              invalid: {
-                color: "#9e2146",
-              },
-            },
-          }}
-        />
+        <h4 className="text-lg font-semibold">Adresa de Livrare</h4>
+        {address ? (
+          <p>Adresa: {address}</p>
+        ) : (
+          <p>Preluare Locație...</p>
+        )}
         <button
-          type="submit"
-          disabled={!stripe || !clientSecret}
+          onClick={handleSubmitOrder}
           className="btn btn-primary btn-sm mt-5 w-full"
         >
-          Pay
+          Comandă
         </button>
-        </form>
-      {cardError ? <p className="text-red text-xs italic">{cardError}</p> : ''}
-     
-      <div className="mt-5 text-center">
-      <hr />
-      <button
-          type="submit"
-    
-          className="btn  btn-sm mt-5 bg-orange-500 text-white"
-        >
-         <FaPaypal /> Pay with Paypal
-        </button>
-      </div>
       </div>
     </div>
   );

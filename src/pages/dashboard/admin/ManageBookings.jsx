@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useMenu from "../../../hooks/useMenu";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
-import { FaArrowCircleRight, FaArrowLeft, FaArrowRight, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaTrashAlt } from "react-icons/fa";
 import { GiConfirmed } from "react-icons/gi";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
@@ -16,7 +16,7 @@ const ManageBookings = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:5000/payments/all`,
+        `https://calabunica-server.onrender.com/payments/all`,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -26,38 +26,36 @@ const ManageBookings = () => {
       return res.json();
     },
   });
-    //   console.log(menu)
-      const axiosSecure = useAxiosSecure();
-    
-    //   pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    const items_Per_Page =  10;
-    const indexOfLastItem = currentPage * items_Per_Page;
-      const indexOfFirstItem = indexOfLastItem - items_Per_Page;
-      const currentItems = orders.slice(indexOfFirstItem, indexOfLastItem);
-    
-      // delete item
-      const handleDeleteItem = (item) => {
-        console.log(item._id)
-    }
+  //   console.log(menu)
+  const axiosSecure = useAxiosSecure();
 
-    // confirm order
-    const confiremedOrder = async(item) => {
-      console.log(item)
-    await  axiosSecure.patch(`/payments/${item._id}`)
-      .then(res =>{
-          console.log(res.data)
-          Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: `Order Confirmed Now!`,
-              showConfirmButton: false,
-              timer: 1500
-            });
-          refetch();
+  //   pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const items_Per_Page = 10;
+  const indexOfLastItem = currentPage * items_Per_Page;
+  const indexOfFirstItem = indexOfLastItem - items_Per_Page;
+  const currentItems = orders.slice(indexOfFirstItem, indexOfLastItem);
+
+  // delete item
+
+
+  // confirm order
+  const confiremedOrder = async (item) => {
+    console.log(item)
+    await axiosSecure.patch(`/payments/${item._id}`)
+      .then(res => {
+        console.log(res.data)
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `Order Confirmed Now!`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        refetch();
       })
 
-    }
+  }
 
   console.log(orders)
 
@@ -77,11 +75,10 @@ const ManageBookings = () => {
               <tr>
                 <th>#</th>
                 <th>Utilizator</th>
-                <th>ID Tranzactie</th>
+                <th>Adresa</th>
                 <th>Preț</th>
                 <th>Status</th>
                 <th>Finalizare Comanda</th>
-                <th>Șterge</th>
               </tr>
             </thead>
             <tbody>
@@ -89,29 +86,21 @@ const ManageBookings = () => {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>
-                   {item.email}
+                    {item.email}
                   </td>
-                  <td>{item.transitionId}</td>
+                  <td>{item.address}</td>
                   <td>{item.price} Lei</td>
                   <td>
                     {item.status}
                   </td>
                   <td className="text-center">
-                  {item.status === "confirmed" ? "done" :  <button
+                    {item.status === "confirmed" ? "done" : <button
                       className="btn bg-orange text-white btn-xs text-center"
                       onClick={() => confiremedOrder(item)}
                     >
                       <GiConfirmed />
-                    </button> }
-                   
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => handleDeleteItem(item)}
-                      className="btn btn-ghost btn-xs"
-                    >
-                      <FaTrashAlt className="text-red"></FaTrashAlt>
-                    </button>
+                    </button>}
+
                   </td>
                 </tr>
               ))}
@@ -122,21 +111,21 @@ const ManageBookings = () => {
 
       {/* Pagination */}
       <div className="flex justify-center my-4">
-          <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="btn btn-sm mr-2 btn-warning"
-          >
-            <FaArrowLeft/> Înapoi 
-          </button>
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={indexOfLastItem >= orders.length}
-            className="btn btn-sm bg-orange text-white"
-          >
-            Înainte  <FaArrowRight/>
-          </button>
-        </div>
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="btn btn-sm mr-2 btn-warning"
+        >
+          <FaArrowLeft /> Înapoi
+        </button>
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={indexOfLastItem >= orders.length}
+          className="btn btn-sm bg-orange text-white"
+        >
+          Înainte  <FaArrowRight />
+        </button>
+      </div>
     </div>
   )
 }
