@@ -16,7 +16,7 @@ const ManageBookings = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `calabunica-server.onrender.com/payments/all`,
+        `http://calabunica-server.onrender.com/payments/all`,
         {
           headers: {
             authorization: `Bearer ${token}`,

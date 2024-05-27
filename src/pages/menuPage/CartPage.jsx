@@ -20,7 +20,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncrease = async (item) => {
     try {
-      const response = await fetch(`calabunica-server.onrender.com/carts/${item._id}`, {
+      const response = await fetch(`http://calabunica-server.onrender.com/carts/${item._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +52,7 @@ const CartPage = () => {
     if (item.quantity > 1) {
       try {
         const response = await fetch(
-          `calabunica-server.onrender.com/carts/${item._id}`,
+          `http://calabunica-server.onrender.com/carts/${item._id}`,
           {
             method: "PUT",
             headers: {
@@ -108,7 +108,7 @@ const CartPage = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`calabunica-server.onrender.com/carts/${item._id}`).then(response => {
+        axios.delete(`http://calabunica-server.onrender.com/carts/${item._id}`).then(response => {
           if (response) {
             refetch();
             Swal.fire("Deleted!", "Your file has been deleted.", "success");

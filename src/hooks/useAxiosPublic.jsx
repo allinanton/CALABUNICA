@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosPublic = axios.create({
-    baseURL: 'calabunica-server.onrender.com'
+    baseURL: 'http://calabunica-server.onrender.com'
 })
 
 const useAxiosPublic = () => {

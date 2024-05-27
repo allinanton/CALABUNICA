@@ -9,7 +9,7 @@ const useCart = () => {
     const { refetch, data: cart = [] } = useQuery({
         queryKey: ['carts', user?.email],
         queryFn: async () => {
-            const res = await fetch(`calabunica-server.onrender.com/carts?email=${user?.email}`, {
+            const res = await fetch(`http://calabunica-server.onrender.com/carts?email=${user?.email}`, {
                 headers: {
                     authorization: `Bearer ${token}`
                 }
