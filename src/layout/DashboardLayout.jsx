@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import logo from "/logo.png";
 import { Link, Outlet } from "react-router-dom";
 import { MdDashboard, MdOutlineDashboardCustomize } from "react-icons/md";
@@ -31,7 +32,7 @@ const sharedMenu = (
     </li>
     <li>
       <Link to="/menu">
-      <FaLocationArrow />
+        <FaLocationArrow />
         Urmarire Comandă
       </Link>
     </li>
@@ -39,98 +40,80 @@ const sharedMenu = (
 );
 
 const DashboardLayout = () => {
-  const {loading} = useAuth()
+  const { loading } = useAuth();
   const [isAdmin, isAdminLoading] = useAdmin();
-  // console.log(isAdmin);
 
   return (
     <div>
-      {
-        isAdminLoading || isAdmin ? <div className="drawer sm:drawer-open">
-        <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col sm:items-start sm:justify-start my-2">
-          {/* Page content here */}
-          <div className="flex items-center justify-between mx-4">
-            <label
-              htmlFor="my-drawer-2"
-              className="btn btn-primary drawer-button sm:hidden"
-            >
-              <MdOutlineDashboardCustomize />
-            </label>
+      {isAdminLoading || isAdmin ? (
+        <div className="drawer sm:drawer-open">
+          <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+          <div className="drawer-content flex flex-col sm:items-start sm:justify-start my-2">
+            <div className="flex items-center justify-between mx-4">
+              <label
+                htmlFor="my-drawer-2"
+                className="btn btn-primary drawer-button sm:hidden"
+              >
+                <MdOutlineDashboardCustomize />
+              </label>
 
-            {/* login or signout */}
-            <button className="btn flex items-center gap-2 rounded-full px-6 bg-orange text-white sm:hidden">
-              <FaRegUser /> Logout
-            </button>
+              <button className="btn flex items-center gap-2 rounded-full px-6 bg-orange text-white sm:hidden">
+                <FaRegUser /> Logout
+              </button>
+            </div>
+            <div className="mt-5 md:mt-2 mx-4">
+              <Outlet />
+            </div>
           </div>
-          <div className="mt-5 md:mt-2 mx-4">
-            <Outlet />
+          <div className="drawer-side">
+            <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
+            <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+              <li>
+                <Link to="/dashboard" className="flex justify-start mb-3">
+                  <img src={logo} alt="" className="w-20 rounded-full" />
+                  <span className="indicator-item badge badge-primary">
+                    administrator
+                  </span>
+                </Link>
+              </li>
+              <hr />
+
+              <li className="mt-3">
+                <Link to="/dashboard">
+                  <MdDashboard /> Tablou Principal
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard/bookings">
+                  <FaShoppingBag /> Vizualizare Comenzi
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard/add-menu">
+                  <FaPlusCircle /> Adaugă Produs
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard/manage-items">
+                  <FaEdit /> Produse
+                </Link>
+              </li>
+              <li className="mb-3">
+                <Link to="/dashboard/users">
+                  <FaUsers />
+                  Utilizatori
+                </Link>
+              </li>
+              <hr />
+              {sharedMenu}
+            </ul>
           </div>
         </div>
-        <div className="drawer-side">
-          <label
-            htmlFor="my-drawer-2"
-            aria-label="close sidebar"
-            className="drawer-overlay"
-          ></label>
-
-          <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-            {/* Sidebar content here */}
-            <li>
-              <Link to="/dashboard" className="flex justify-start mb-3">
-                <img src={logo} alt="" className="w-20 rounded-full" />
-                <span className="indicator-item badge badge-primary">
-                  administrator
-                </span>
-              </Link>
-            </li>
-            <hr />
-
-            {/* dashboard */}
-            <li className="mt-3">
-              <Link to="/dashboard">
-                <MdDashboard /> Tablou Principal
-              </Link>
-            </li>
-
-            {/* manage orders */}
-            <li>
-              <Link to="/dashboard/bookings">
-                <FaShoppingBag /> Vizualizare Comenzi
-              </Link>
-            </li>
-
-            {/* Add Menu Items */}
-            <li>
-              <Link to="/dashboard/add-menu">
-                <FaPlusCircle /> Adaugă Produs
-              </Link>
-            </li>
-
-            {/* Manage Menu Items */}
-            <li>
-              <Link to="/dashboard/manage-items">
-                <FaEdit /> Produse
-              </Link>
-            </li>
-
-            {/* users */}
-            <li className="mb-3">
-              <Link to="/dashboard/users">
-                <FaUsers />
-                Utilizatori
-              </Link>
-            </li>
-
-            {/* shared menu */}
-            <hr />
-            {sharedMenu}
-          </ul>
+      ) : (loading ? <Login /> : (
+        <div className="h-screen flex items-center justify-center">
+          <Link to="/">Back to Home</Link>
         </div>
-      </div> :  (loading ? <Login/> : <div className="h-screen flex items-center justify-center">
-        <Link to="/" >Back to Home</Link>
-        </div> )
-      }
+      ))}
     </div>
   );
 };

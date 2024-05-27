@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
@@ -6,6 +6,13 @@ import { FaBook, FaUsers } from "react-icons/fa";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const [tracking, setTracking] = useState(
+    localStorage.getItem("tracking") === "true"
+  );
+  const [location, setLocation] = useState(
+    JSON.parse(localStorage.getItem("location")) || null
+  );
+  const [watchId, setWatchId] = useState(null);
   const axiosSecure = useAxiosSecure();
 
   const { data: stats = {} } = useQuery({
@@ -16,15 +23,55 @@ const Dashboard = () => {
     },
   });
 
+  useEffect(() => {
+    if (tracking) {
+      startTracking();
+    } else if (watchId) {
+      navigator.geolocation.clearWatch(watchId);
+      setWatchId(null);
+    }
+    return () => {
+      if (watchId) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    };
+  }, [tracking]);
+
+  useEffect(() => {
+    // Store tracking state and location in local storage
+    localStorage.setItem("tracking", tracking);
+    localStorage.setItem("location", JSON.stringify(location));
+  }, [tracking, location]);
+
+  const startTracking = () => {
+    if (navigator.geolocation) {
+      const id = navigator.geolocation.watchPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log("Position updated:", { latitude, longitude });
+          setLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.error("Error getting location:", error.message);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+      setWatchId(id);
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
+
+  const toggleTracking = () => {
+    setTracking(!tracking);
+  };
+
   return (
     <div className="w-full md:w-[1080px] mx-auto px-4 ">
       <h2 className="text-3xl font-semibold my-4">
         Salut, {user.displayName}
       </h2>
-      {/* stats */}
       <div className="stats shadow flex flex-col md:flex-row">
-
-
         <div className="stat bg-[#ff7f66]">
           <div className="stat-figure text-secondary">
             <FaUsers className="text-3xl"></FaUsers>
@@ -32,7 +79,6 @@ const Dashboard = () => {
           <div className="stat-title">Utilizatori</div>
           <div className="stat-value">{stats.users}</div>
         </div>
-
         <div className="stat bg-indigo-400">
           <div className="stat-figure text-secondary">
             <FaBook className="text-3xl"></FaBook>
@@ -40,7 +86,6 @@ const Dashboard = () => {
           <div className="stat-title">Produse</div>
           <div className="stat-value">{stats.menuItems}</div>
         </div>
-
         <div className="stat bg-purple-300">
           <div className="stat-figure text-secondary">
             <svg
@@ -61,7 +106,17 @@ const Dashboard = () => {
           <div className="stat-value">{stats.orders}</div>
         </div>
       </div>
-      
+      <div className="mt-5 mx-4">
+        <button onClick={toggleTracking} className="btn btn-primary">
+          {tracking ? "Stop Tracking" : "Start Tracking"}
+        </button>
+        {location && (
+          <p>
+            Current Location: Latitude {location.latitude}, Longitude{" "}
+            {location.longitude}
+          </p>
+        )}
+      </div>
     </div>
   );
 };
