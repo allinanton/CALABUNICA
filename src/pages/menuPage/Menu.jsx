@@ -15,7 +15,7 @@ const Menu = () => {
     // Fetch data from the backend
     const fetchData = async () => {
       try {
-        const response = await fetch("http://calabunica-server.onrender.com");
+        const response = await fetch("https://calabunica-server.onrender.com");
         const data = await response.json();
         setMenu(data);
         setFilteredItems(data); // Initially, display all items

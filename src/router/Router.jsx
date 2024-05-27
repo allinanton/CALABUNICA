@@ -79,7 +79,7 @@ const router = createBrowserRouter([
         {
           path: 'update-menu/:id',
           element: <UpdateMenu/>,
-          loader: ({ params }) => fetch(`http://calabunica-server.onrender.com/${params.id}`)
+          loader: ({ params }) => fetch(`https://calabunica-server.onrender.com/${params.id}`)
         },
         {
           path: 'bookings',
