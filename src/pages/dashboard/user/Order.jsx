@@ -12,7 +12,7 @@ const Order = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `https://calabunica-server.onrender.com/payments?email=${user?.email}`,
+        `http://localhost:5000/payments?email=${user?.email}`,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -23,10 +23,8 @@ const Order = () => {
     },
   });
 
-  // State to track the visibility of additional content for each row
-  const [showAdditionalContent, setShowAdditionalContent] = useState(
-    Array(orders.length).fill(false)
-  );
+  // State to track the index of the currently visible map
+  const [visibleMapIndex, setVisibleMapIndex] = useState(null);
 
   // date format
   const formatDate = (createdAt) => {
@@ -40,10 +38,12 @@ const Order = () => {
   };
 
   // Function to toggle visibility for a specific row
-  const toggleAdditionalContent = (index) => {
-    const updatedVisibility = [...showAdditionalContent];
-    updatedVisibility[index] = !updatedVisibility[index];
-    setShowAdditionalContent(updatedVisibility);
+  const toggleMapVisibility = (index) => {
+    if (visibleMapIndex === index) {
+      setVisibleMapIndex(null); // Close the map if the same button is clicked again
+    } else {
+      setVisibleMapIndex(index); // Open the map for the clicked button
+    }
   };
 
   return (
@@ -87,29 +87,17 @@ const Order = () => {
                         <td>{item.price} Lei</td>
                         <td>{item.status}</td>
                         <td>
-                          {item.status !== "confirmed" ? (
+                          {item.status === "În Curs De Livrare" && (
                             <button
                               className="btn btn-sm border-none text-orange-400 bg-transparent"
-                              onClick={() => toggleAdditionalContent(index)} // Toggle visibility for the corresponding row
+                              onClick={() => toggleMapVisibility(index)} // Toggle visibility for the corresponding row
                             >
                               Hartă
                             </button>
-                          ) : (
-                            <svg
-                              fill="#ff7f66"
-                              className="w-6 h-6 ml-12"
-                              viewBox="0 0 32 32"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g id="Group_30" data-name="Group 30" transform="translate(-310.001 -321.695)">
-                                <path id="Path_364" data-name="Path 364" d="M326,321.7a16,16,0,1,0,16,16A16,16,0,0,0,326,321.7Zm0,28a12,12,0,1,1,12-12A12,12,0,0,1,326,349.7Z" />
-                                <rect id="Rectangle_41" data-name="Rectangle 41" width="28.969" height="4" transform="translate(314.348 346.523) rotate(-45.001)" />
-                              </g>
-                            </svg>
                           )}
                         </td>
                       </tr>
-                      {showAdditionalContent[index] && (
+                      {visibleMapIndex === index && (
                         <tr>
                           <td colSpan="6" className="p-0">
                             {/* Render map component for the order */}
@@ -117,9 +105,9 @@ const Order = () => {
                           </td>
                         </tr>
                       )}
-
                     </React.Fragment>
                   ))}
+
                 </tbody>
                 {/* foot */}
               </table>

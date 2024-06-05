@@ -44,7 +44,7 @@ const AddMenu = () => {
           Swal.fire({
               position: "top-end",
               icon: "success",
-              title: `${data.name} is added to the menu.`,
+              title: `${data.name} este adăugat în meniu.`,
               showConfirmButton: false,
               timer: 1500
             });
@@ -66,7 +66,7 @@ const AddMenu = () => {
             </label>
             <input
               type="text"
-              placeholder="Recipe Name"
+              placeholder="Nume Produs"
               {...register("name", { required: true })}
               required
               className="input input-bordered w-full"
@@ -102,7 +102,7 @@ const AddMenu = () => {
               </label>
               <input
                 type="number"
-                placeholder="Price"
+                placeholder="Preț"
                 {...register("price", { required: true })}
                 className="input input-bordered w-full"
               />
@@ -116,7 +116,7 @@ const AddMenu = () => {
             <textarea
               {...register("recipe")}
               className="textarea textarea-bordered h-24"
-              placeholder="Bio"
+              placeholder="Descriere"
             ></textarea>
           </div>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const CheckoutForm = ({ price, cart }) => {
   const axiosSecure = useAxiosSecure();
@@ -16,7 +17,6 @@ const CheckoutForm = ({ price, cart }) => {
   }, 0);
 
   useEffect(() => {
-    // Get device location when component mounts
     getLocation();
   }, []);
 
@@ -67,7 +67,7 @@ const CheckoutForm = ({ price, cart }) => {
       email: user.email,
       price,
       quantity: cart.length,
-      status: "order pending",
+      status: "În Pregătire",
       itemsName: cart.map((item) => item.name),
       cartItems: cart.map((item) => item._id),
       menuItems: cart.map((item) => item.menuItemId),
@@ -81,12 +81,19 @@ const CheckoutForm = ({ price, cart }) => {
       .post("/payments", orderInfo)
       .then((res) => {
         if (res.data) {
-          alert("Order submitted successfully!");
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: `Comanda a fost plasată cu success`,
+            text: `Veți fi redirecționat la lista de comenzi`,
+            showConfirmButton: false,
+            timer: 1500
+          });
           navigate("/order");
         }
       })
       .catch((error) => {
-        console.error("Error submitting order:", error);
+        console.error("Eroare la plasarea comenzii:", error);
         // Handle error if needed
       });
   };

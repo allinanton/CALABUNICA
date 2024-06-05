@@ -4,6 +4,7 @@ import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../contexts/AuthProvider";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 
 const Modal = () => {
   const [errorMessage, seterrorMessage] = useState("");
@@ -11,10 +12,10 @@ const Modal = () => {
   const axiosPublic = useAxiosPublic();
 
   // modal close button
-  const [isModalOpen, setIsModalOpen] = useState(true); 
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const closeModal = () => {
     setIsModalOpen(false);
-    document.getElementById("my_modal_5").close()
+    document.getElementById("my_modal_5").close();
   };
 
   const navigate = useNavigate();
@@ -30,42 +31,64 @@ const Modal = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const email = data.email;
     const password = data.password;
-    login(email, password)
-      .then((result) => {
-        // Signed in
-        const user = result.user;
+    try {
+      const result = await login(email, password);
+      const user = result.user;
 
-        const userInfo = {
-          email: result.user?.email,
-          name: result.user?.displayName
+      const userInfo = {
+        email: user?.email,
+        name: user?.displayName
+      };
+
+      try {
+        const res = await axiosPublic.post('/users', userInfo);
+        console.log(res.data);
+
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Autentificare reușită!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate(from);  // Navigate to the original requested page
+        closeModal();
+      } catch (axiosError) {
+        if (axiosError.response && axiosError.response.status === 302) {
+          const redirectUrl = axiosError.response.headers['location'];
+          try {
+            const redirectedResponse = await axiosPublic.get(redirectUrl);
+
+
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Autentificare reușită după redirecționare!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            navigate(from);  // Navigate to the original requested page
+            closeModal();
+          } catch (redirectError) {
+            seterrorMessage("Eroare după redirecționare. Vă rugăm să încercați din nou.");
+          }
+        } else {
+          seterrorMessage("Vă rog introduceți o parolă și email valide!");
+        }
       }
-      axiosPublic.post('/users', userInfo)
-      .then(res =>{
-          console.log(res.data);
-        
-      })
-        // console.log(user);
-        alert("Login successful!");
-        navigate("/");
-        console.log("Modal Open:", isModalOpen);
-        closeModal(); 
-        // ...
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        seterrorMessage("Please provide valid email & password!");
-      });
-      reset()
-
+    } catch (error) {
+      seterrorMessage("Vă rog introduceți o parolă și email valide!");
+    }
+    reset();
   };
+
 
   // login with google
   const handleRegister = () => {
     signUpWithGmail().then((result) => {
-      console.log(result.user);
       const userInfo = {
         email: result.user?.email,
         name: result.user?.displayName,
@@ -87,12 +110,12 @@ const Modal = () => {
             method="dialog"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <h3 className="font-bold text-lg">Please Login!</h3>
+            <h3 className="font-bold text-lg">Autentificare!</h3>
 
             {/* email */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">Adresă de email</span>
               </label>
               <input
                 type="email"
@@ -105,17 +128,17 @@ const Modal = () => {
             {/* password */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">Parolă</span>
               </label>
               <input
                 type="password"
-                placeholder="password"
+                placeholder="parolă"
                 className="input input-bordered"
                 {...register("password", { required: true })}
               />
               <label className="label">
                 <a href="#" className="label-text-alt link link-hover mt-2">
-                  Forgot password?
+                  Ați uitat parola?
                 </a>
               </label>
             </div>
@@ -123,7 +146,7 @@ const Modal = () => {
             {/* show errors */}
             {errorMessage ? (
               <p className="text-red text-xs italic">
-                Provide a correct username & password.
+                Vă rog introduceți o parolă și email valide.
               </p>
             ) : (
               ""
@@ -134,7 +157,7 @@ const Modal = () => {
               <input
                 type="submit"
                 className="btn bg-orange text-white"
-                value="Login"
+                value="Autentificare"
               />
             </div>
 
@@ -148,9 +171,9 @@ const Modal = () => {
             </div>
 
             <p className="text-center my-2">
-              Donot have an account?
+              Nu aveți un cont?
               <Link to="/signup" className="underline text-red ml-1">
-                Signup Now
+                Creeați un cont nou
               </Link>
             </p>
           </form>

@@ -50,7 +50,7 @@ const UpdateMenu = () => {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: `Item is updated successfully!`,
+          title: `Produs modificat cu succes!`,
           showConfirmButton: false,
           timer: 1500,
         });
@@ -72,7 +72,7 @@ const UpdateMenu = () => {
             </label>
             <input
               type="text"
-              placeholder="Recipe Name"
+              placeholder="Nume Produs"
               defaultValue={item.name}
               {...register("name", { required: true })}
               required
@@ -109,7 +109,7 @@ const UpdateMenu = () => {
               </label>
               <input
                 type="number"
-                placeholder="Price"
+                placeholder="Preț"
                 defaultValue={item.price}
                 {...register("price", { required: true })}
                 className="input input-bordered w-full"
@@ -124,7 +124,6 @@ const UpdateMenu = () => {
             <textarea
               {...register("recipe")}
               className="textarea textarea-bordered h-24"
-              placeholder="recipe details"
               defaultValue={item.recipe}
             ></textarea>
           </div>

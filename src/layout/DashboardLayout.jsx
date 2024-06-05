@@ -30,12 +30,6 @@ const sharedMenu = (
         Meniu
       </Link>
     </li>
-    <li>
-      <Link to="/menu">
-        <FaLocationArrow />
-        Urmarire Comandă
-      </Link>
-    </li>
   </>
 );
 

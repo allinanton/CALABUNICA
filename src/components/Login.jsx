@@ -4,6 +4,7 @@ import {FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../contexts/AuthProvider";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const axiosPublic = useAxiosPublic();
@@ -40,13 +41,19 @@ const Login = () => {
           navigate('/');
       })
         // console.log(user);
-        alert("Login successful!");
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Autentificare reușită!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         navigate('/');
         // ...
       })
       .catch((error) => {
         const errorMessage = error.message;
-        seterrorMessage("Please provide valid email & password!");
+        seterrorMessage("Vă rog introduceți o parolă și email valide!");
       });
       reset()
 
@@ -63,7 +70,7 @@ const Login = () => {
       axiosPublic.post('/users', userInfo)
       .then(res =>{
           console.log(res.data);
-          alert("Login successful!");
+          alert("Autentificare reușită!");
         
       })
       navigate('/');
@@ -77,12 +84,12 @@ const Login = () => {
             method="dialog"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <h3 className="font-bold text-lg">Please Login!</h3>
+            <h3 className="font-bold text-lg">Autentificare!</h3>
 
             {/* email */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">Adresă de email</span>
               </label>
               <input
                 type="email"
@@ -95,17 +102,17 @@ const Login = () => {
             {/* password */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">Parolă</span>
               </label>
               <input
                 type="password"
-                placeholder="password"
+                placeholder="parolă"
                 className="input input-bordered"
                 {...register("password", { required: true })}
               />
               <label className="label">
                 <a href="#" className="label-text-alt link link-hover mt-2">
-                  Forgot password?
+                  Ați uitat parola?
                 </a>
               </label>
             </div>
@@ -113,7 +120,7 @@ const Login = () => {
             {/* show errors */}
             {errorMessage ? (
               <p className="text-red text-xs italic">
-                Provide a correct username & password.
+                Vă rog introduceți o parolă și email valide.
               </p>
             ) : (
               ""
@@ -124,16 +131,16 @@ const Login = () => {
               <input
                 type="submit"
                 className="btn bg-orange text-white"
-                value="Login"
+                value="Autentificare"
               />
             </div>
 
     
 
             <p className="text-center my-2">
-              Donot have an account?
+              Nu aveți un cont?
               <Link to="/signup" className="underline text-red ml-1">
-                Signup Now
+                Creeați un cont nou
               </Link>
             </p>
           </form>
