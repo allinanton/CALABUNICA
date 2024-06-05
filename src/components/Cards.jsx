@@ -20,14 +20,14 @@ const Cards = ({ item }) => {
     if(user && user.email){
         const cartItem = {menuItemId: _id, name, quantity : 1, image, price, email: user.email}
 
-        axios.post('https://calabunica-server.onrender.com/carts', cartItem)
+        axios.post('http://localhost:5000/carts', cartItem)
         .then((response) => {
           if(response){
             refetch(); // refetch cart
               Swal.fire({
                   position: 'center',
                   icon: 'success',
-                  title: 'Food added on the cart.',
+                  title: 'Produs adăugat în coș.',
                   showConfirmButton: false,
                   timer: 1500
                 })
@@ -47,12 +47,13 @@ const Cards = ({ item }) => {
     }
     else{
         Swal.fire({
-            title: 'Please login to order the food',
+            title: 'Vă rugăm să vă autentificați pentru a comanda',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Login now!'
+            confirmButtonText: 'Autentificare!',
+            cancelButtonText: 'Anulează'
           }).then((result) => {
             if (result.isConfirmed) {
               navigate('/login', {state: {from: location}})
