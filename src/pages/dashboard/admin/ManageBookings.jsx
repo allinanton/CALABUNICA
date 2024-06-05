@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useMenu from "../../../hooks/useMenu";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight, FaTrashAlt } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaTrashAlt, FaCheckCircle } from "react-icons/fa";
 import { GiConfirmed } from "react-icons/gi";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
@@ -16,7 +16,7 @@ const ManageBookings = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `https://calabunica-server.onrender.com/payments/all`,
+        `http://localhost:5000/payments/all`,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -26,38 +26,45 @@ const ManageBookings = () => {
       return res.json();
     },
   });
-  //   console.log(menu)
-  const axiosSecure = useAxiosSecure();
 
-  //   pagination
+  const axiosSecure = useAxiosSecure();
   const [currentPage, setCurrentPage] = useState(1);
   const items_Per_Page = 10;
   const indexOfLastItem = currentPage * items_Per_Page;
   const indexOfFirstItem = indexOfLastItem - items_Per_Page;
   const currentItems = orders.slice(indexOfFirstItem, indexOfLastItem);
 
-  // delete item
-
-
-  // confirm order
   const confiremedOrder = async (item) => {
-    console.log(item)
-    await axiosSecure.patch(`/payments/${item._id}`)
+    console.log(item);
+
+    let newStatus;
+    switch (item.status) {
+      case "În Pregătire":
+        newStatus = "În Curs De Livrare";
+        break;
+      case "În Curs De Livrare":
+        newStatus = "Finalizată";
+        break;
+      default:
+        newStatus = "În Pregătire";
+    }
+
+    await axiosSecure.patch(`/payments/${item._id}`, { status: newStatus })
       .then(res => {
-        console.log(res.data)
+        console.log(res.data);
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: `Order Confirmed Now!`,
+          title: `Statusul comenzii este acum: ${newStatus}!`,
           showConfirmButton: false,
           timer: 1500
         });
         refetch();
       })
-
+      .catch(error => {
+        console.error('Eroare la schimbarea statusului:', error);
+      });
   }
-
-
 
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
@@ -65,11 +72,9 @@ const ManageBookings = () => {
         Gestionare <span className="text-orange">Comenzi</span>
       </h2>
 
-      {/* menu items table  */}
       <div>
         <div className="overflow-x-auto lg:overflow-x-visible">
           <table className="table w-full">
-            {/* head */}
             <thead>
               <tr>
                 <th>#</th>
@@ -77,29 +82,28 @@ const ManageBookings = () => {
                 <th>Adresa</th>
                 <th>Preț</th>
                 <th>Status</th>
-                <th>Finalizare Comanda</th>
+                
               </tr>
             </thead>
             <tbody>
               {currentItems.map((item, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>
-                    {item.email}
-                  </td>
+                  <td>{item.email}</td>
                   <td>{item.address}</td>
                   <td>{item.price} Lei</td>
-                  <td>
-                    {item.status}
-                  </td>
+                  <td>{item.status}</td>
                   <td className="text-center">
-                    {item.status === "confirmed" ? "done" : <button
-                      className="btn bg-orange text-white btn-xs text-center"
-                      onClick={() => confiremedOrder(item)}
-                    >
-                      <GiConfirmed />
-                    </button>}
-
+                    {item.status === "Finalizată" ? (
+                    <FaCheckCircle style={{ color: "green", fontSize: "24px", display: "inline-flex", alignItems: "center" }} /> 
+                    ) : (
+                      <button
+                        className="btn bg-orange text-white btn-xs text-center"
+                        onClick={() => confiremedOrder(item)}
+                      >
+                        {item.status === "În Pregătire" ? "Următorul Pas" : "Finalizare"}
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -108,7 +112,6 @@ const ManageBookings = () => {
         </div>
       </div>
 
-      {/* Pagination */}
       <div className="flex justify-center my-4">
         <button
           onClick={() => setCurrentPage(currentPage - 1)}
@@ -129,4 +132,4 @@ const ManageBookings = () => {
   )
 }
 
-export default ManageBookings
+export default ManageBookings;

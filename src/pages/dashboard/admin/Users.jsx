@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import React from "react";
 import { FaTrashAlt, FaUsers } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -22,7 +21,7 @@ const Users = () => {
           Swal.fire({
               position: "top-end",
               icon: "success",
-              title: `${user.name} is an Admin Now!`,
+              title: `${user.name} este Admin acum!`,
               showConfirmButton: false,
               timer: 1500
             });
@@ -32,13 +31,14 @@ const Users = () => {
 
   const handleDeleteUser = user => {
     Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "Ești sigur?",
+        text: "Nu vei putea recupera utilizatorul!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+        confirmButtonText: "Da, șterge!",
+        cancelButtonText: "Anulează!"
     }).then((result) => {
         if (result.isConfirmed) {
 
@@ -46,8 +46,8 @@ const Users = () => {
                 .then(res => {
                   console.log(res)
                   Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
+                    title: "Utilizator șters!",
+                    text: "Acest utilizator nu mai există în baza de date",
                     icon: "success"
                 });
                 })

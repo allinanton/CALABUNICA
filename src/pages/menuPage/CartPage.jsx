@@ -20,7 +20,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncrease = async (item) => {
     try {
-      const response = await fetch(`https://calabunica-server.onrender.com/carts/${item._id}`, {
+      const response = await fetch(`http://localhost:5000/carts/${item._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +52,7 @@ const CartPage = () => {
     if (item.quantity > 1) {
       try {
         const response = await fetch(
-          `https://calabunica-server.onrender.com/carts/${item._id}`,
+          `http://localhost:5000/carts/${item._id}`,
           {
             method: "PUT",
             headers: {
@@ -99,19 +99,20 @@ const CartPage = () => {
   // delete an item
   const handleDelete = (item) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "Sunteți sigur?",
+      text: "Produsul va fi eliminat din coș",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Da, elimină!",
+      cancelButtonText: "Anulează",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`https://calabunica-server.onrender.com/carts/${item._id}`).then(response => {
+        axios.delete(`http://localhost:5000/carts/${item._id}`).then(response => {
           if (response) {
             refetch();
-            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            Swal.fire("Eliminat!", "Produsul a fost eliminat din coș.", "success");
           }
         })
           .catch(error => {

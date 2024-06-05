@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
-import avatarImg from "/images/avatar.jpg"
+import avatarImg from "/images/home/userphotos/1.jpg"
 import { useNavigate } from "react-router-dom";
 
 const Profile = ({ user }) => {
@@ -30,8 +30,7 @@ const Profile = ({ user }) => {
             className="drawer-button btn btn-ghost btn-circle avatar"
           >
             <div className="w-30 rounded-full">
-              {user.photoURL? <img alt="" src={user.photoURL} /> : <img alt="" src={avatarImg} />}
-              
+              {user.photoURL ? <img alt="" src={user.photoURL} /> : <img alt="" src={avatarImg} />}
             </div>
           </label>
         </div>
@@ -48,9 +47,6 @@ const Profile = ({ user }) => {
             </li>
             <li>
               <a href="/order">Comenzi</a>
-            </li>
-            <li>
-              <a>Setări</a>
             </li>
             <li>
               <a href="/dashboard">Tablou de instrumente</a>

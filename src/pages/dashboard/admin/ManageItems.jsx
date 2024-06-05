@@ -21,13 +21,14 @@ const ManageItems = () => {
   const handleDeleteItem = (item) => {
     console.log(item._id)
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "Ești sigur că vrei sa ștergi produsul?",
+      text: "Nu vei putea recupera produsul șters!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
+      confirmButtonText: "Da, șterge",
+      cancelButtonText: "Anulează"
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await axiosSecure.delete(`/menu/${item._id}`);
@@ -36,7 +37,7 @@ const ManageItems = () => {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: `${item.name} has been deleted`,
+          title: `${item.name} a fost șters`,
           showConfirmButton: false,
           timer: 1500
         });
