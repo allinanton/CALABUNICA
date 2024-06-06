@@ -175,9 +175,15 @@ const Signup = () => {
               type="email"
               placeholder="email"
               className="input input-bordered"
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: "Un email este necesar",
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: "Adresa de email nu este validă"
+                }
+              })}
             />
-            {errors.email && <span className="text-red text-xs italic">Un email este necesar</span>}
+            {errors.email && <span className="text-red text-xs italic">{errors.email.message}</span>}
           </div>
 
           {/* password */}
@@ -189,9 +195,23 @@ const Signup = () => {
               type="password"
               placeholder="parolă"
               className="input input-bordered"
-              {...register("password", { required: true })}
+              {...register("password", {
+                required: "O parolă este necesară",
+                minLength: {
+                  value: 7,
+                  message: "Parola trebuie să aibă cel puțin 7 caractere"
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Parola nu poate avea mai mult de 20 de caractere"
+                },
+                pattern: {
+                  value: /\d/,
+                  message: "Parola trebuie să conțină cel puțin o cifră"
+                }
+              })}
             />
-            {errors.password && <span className="text-red text-xs italic">O parolă este necesară</span>}
+            {errors.password && <span className="text-red text-xs italic">{errors.password.message}</span>}
           </div>
 
           {/* submit btn */}
@@ -224,4 +244,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
