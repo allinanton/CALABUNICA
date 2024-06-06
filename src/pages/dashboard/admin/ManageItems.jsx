@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useMenu from "../../../hooks/useMenu";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
-import { FaArrowCircleRight, FaArrowLeft, FaArrowRight, FaEdit, FaTrashAlt } from "react-icons/fa";
+import {FaArrowLeft, FaArrowRight, FaEdit, FaTrashAlt } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const ManageItems = () => {

@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import useMenu from "../../../hooks/useMenu";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { Link } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight, FaTrashAlt, FaCheckCircle } from "react-icons/fa";
-import { GiConfirmed } from "react-icons/gi";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
@@ -64,7 +61,37 @@ const ManageBookings = () => {
       .catch(error => {
         console.error('Eroare la schimbarea statusului:', error);
       });
-  }
+  };
+
+  const deleteOrder = async (item) => {
+    Swal.fire({
+      title: "Ești sigur?",
+      text: "Nu vei putea recupera această comandă!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Da, șterge!",
+      cancelButtonText: "Anulează",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.delete(`/payments/${item._id}`)
+          .then(res => {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Comanda a fost ștearsă!",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            refetch();
+          })
+          .catch(error => {
+            console.error('Eroare la ștergerea comenzii:', error);
+          });
+      }
+    });
+  };
 
   return (
     <div className="w-full md:w-[870px] mx-auto px-4 ">
@@ -82,7 +109,8 @@ const ManageBookings = () => {
                 <th>Adresa</th>
                 <th>Preț</th>
                 <th>Status</th>
-                
+                <th>Acțiuni</th>
+                <th>Ștergere</th>
               </tr>
             </thead>
             <tbody>
@@ -95,7 +123,14 @@ const ManageBookings = () => {
                   <td>{item.status}</td>
                   <td className="text-center">
                     {item.status === "Finalizată" ? (
-                    <FaCheckCircle style={{ color: "green", fontSize: "24px", display: "inline-flex", alignItems: "center" }} /> 
+                      <FaCheckCircle
+                        style={{
+                          color: "green",
+                          fontSize: "24px",
+                          display: "inline-flex",
+                          alignItems: "center"
+                        }}
+                      />
                     ) : (
                       <button
                         className="btn bg-orange text-white btn-xs text-center"
@@ -104,6 +139,14 @@ const ManageBookings = () => {
                         {item.status === "În Pregătire" ? "Următorul Pas" : "Finalizare"}
                       </button>
                     )}
+                  </td>
+                  <td className="text-center">
+                    <button
+                      className="btn btn-danger text-red btn-xs"
+                      onClick={() => deleteOrder(item)}
+                    >
+                      <FaTrashAlt />
+                    </button>
                   </td>
                 </tr>
               ))}

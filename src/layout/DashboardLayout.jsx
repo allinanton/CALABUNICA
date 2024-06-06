@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import logo from "/logo.png";
 import { Link, Outlet } from "react-router-dom";
 import { MdDashboard, MdOutlineDashboardCustomize } from "react-icons/md";
 import {
   FaEdit,
   FaHome,
-  FaLocationArrow,
   FaPlusCircle,
   FaRegUser,
   FaShoppingBag,
