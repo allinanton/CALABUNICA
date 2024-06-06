@@ -61,12 +61,10 @@ const Modal = () => {
           const redirectUrl = axiosError.response.headers['location'];
           try {
             const redirectedResponse = await axiosPublic.get(redirectUrl);
-
-
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Autentificare reușită după redirecționare!",
+              title: "Autentificare reușită!",
               showConfirmButton: false,
               timer: 1500,
             });
