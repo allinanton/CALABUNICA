@@ -1,13 +1,12 @@
-// UserProfile.jsx
-
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2'
 
 const UserProfile = () => {
-  const { user } = useContext(AuthContext); // Assuming user context provides user details
+  const { updateUserProfile, user } = useContext(AuthContext); // Assuming user context provides user details and updateUserProfile function
   const { register, handleSubmit } = useForm();
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState(user?.photoURL || null);
 
   const onSubmit = async (data) => {
     const name = data.name;
@@ -19,6 +18,10 @@ const UserProfile = () => {
     }
 
     try {
+      // Update Firebase profile
+      await updateUserProfile(name, photoURL);
+
+      // Update MongoDB profile
       const response = await fetch(`http://localhost:5000/users/profile`, {
         method: "PUT",
         headers: {
@@ -29,14 +32,22 @@ const UserProfile = () => {
       });
 
       if (response.ok) {
-        alert('Profile updated successfully');
-      } else {
-        console.error("Failed to update profile");
-        alert('Failed to update profile');
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Modificări profil salvate cu succes',
+          showConfirmButton: false,
+          timer: 2000
+        })
       }
     } catch (error) {
-      console.error("Error updating profile:", error);
-      alert('Error updating profile');
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Eroare la modificarea profilului',
+        showConfirmButton: false,
+        timer: 2000
+      })
     }
   };
 
@@ -50,28 +61,35 @@ const UserProfile = () => {
         <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Name</span>
+              <span className="label-text">Nume</span>
             </label>
-            <input type="text" {...register('name')} placeholder="Your name" className="input input-bordered" required />
+            <input
+              type="text"
+              {...register("name")}
+              placeholder="Your name"
+              defaultValue={user?.displayName || ""}
+              className="input input-bordered"
+              required
+            />
           </div>
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Choose a Photo</span>
+              <span className="label-text">Alegeți un avatar</span>
             </label>
             <div className="flex justify-between mt-2">
               {['1.jpg', '2.jpg', '3.jpg', '4.jpg'].map((photo) => (
                 <img
                   key={photo}
-                  src={`/images/home/userphotos/${photo}`}
+                  src={`images/home/userphotos/${photo}`}
                   alt={photo}
-                  className={`w-16 h-16 rounded-full cursor-pointer ${selectedPhoto === `/images/home/userphotos/${photo}` ? 'border-2 border-blue-500' : ''}`}
-                  onClick={() => handlePhotoSelect(`/images/home/userphotos/${photo}`)}
+                  className={`w-16 h-16 rounded-full cursor-pointer ${selectedPhoto === `images/home/userphotos/${photo}` ? 'border-2 border-blue-500' : ''}`}
+                  onClick={() => handlePhotoSelect(`images/home/userphotos/${photo}`)}
                 />
               ))}
             </div>
           </div>
           <div className="form-control mt-6">
-            <input type='submit' value={"Update"} className="btn bg-orange text-white" />
+            <input type='submit' value={"Salvați Modificările"} className="btn bg-orange text-white" />
           </div>
         </form>
       </div>
