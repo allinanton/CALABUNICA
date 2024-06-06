@@ -18,15 +18,17 @@ const Signup = () => {
   const onSubmit = (data) => {
     const email = data.email;
     const password = data.password;
+    const phoneNumber = data.phoneNumber; // Get the phone number
 
     createUser(email, password)
       .then((result) => {
         const user = result.user;
-        updateUserProfile(data.name, data.photoURL)
+        updateUserProfile(data.name, data.photoURL, phoneNumber) // Include the phone number
           .then(() => {
             const userInfo = {
               name: data.name,
               email: data.email,
+              phoneNumber: data.phoneNumber // Include the phone number
             };
 
             axiosPublic.post("/users", userInfo)
@@ -102,6 +104,7 @@ const Signup = () => {
         const userInfo = {
           email: result.user?.email,
           name: result.user?.displayName,
+          phoneNumber: result.user?.phoneNumber // Include phone number if available
         };
         axiosPublic.post('/users', userInfo)
           .then((res) => {
@@ -184,6 +187,26 @@ const Signup = () => {
               })}
             />
             {errors.email && <span className="text-red text-xs italic">{errors.email.message}</span>}
+          </div>
+
+          {/* phone number */}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Număr de telefon</span>
+            </label>
+            <input
+              type="text"
+              placeholder="numărul tău de telefon"
+              className="input input-bordered"
+              {...register("phoneNumber", {
+                required: "Un număr de telefon este necesar",
+                pattern: {
+                  value: /^\d{10}$/,
+                  message: "Numărul de telefon trebuie să conțină 10 cifre"
+                }
+              })}
+            />
+            {errors.phoneNumber && <span className="text-red text-xs italic">{errors.phoneNumber.message}</span>}
           </div>
 
           {/* password */}

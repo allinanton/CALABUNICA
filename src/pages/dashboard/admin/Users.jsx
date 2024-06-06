@@ -6,55 +6,52 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const Users = () => {
   const axiosSecure = useAxiosSecure();
-    const { data: users = [], refetch } = useQuery({
-        queryKey: ['users'],
-        queryFn: async () => {
-            const res = await axiosSecure.get('/users');
-            return res.data;
-        }
-    })
+  const { data: users = [], refetch } = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const res = await axiosSecure.get('/users');
+      return res.data;
+    }
+  });
 
-    const handleMakeAdmin = user =>{
-      axiosSecure.patch(`/users/admin/${user._id}`)
-      .then(res =>{
-          console.log(res.data)
-          Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: `${user.name} este Admin acum!`,
-              showConfirmButton: false,
-              timer: 1500
-            });
-            refetch();
-      })
+  const handleMakeAdmin = user => {
+    axiosSecure.patch(`/users/admin/${user._id}`)
+      .then(res => {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `${user.name} este Admin acum!`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        refetch();
+      });
   };
 
   const handleDeleteUser = user => {
     Swal.fire({
-        title: "Ești sigur?",
-        text: "Nu vei putea recupera utilizatorul!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Da, șterge!",
-        cancelButtonText: "Anulează!"
+      title: "Ești sigur?",
+      text: "Nu vei putea recupera utilizatorul!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Da, șterge!",
+      cancelButtonText: "Anulează!"
     }).then((result) => {
-        if (result.isConfirmed) {
-
-            axiosSecure.delete(`/users/${user._id}`)
-                .then(res => {
-                  console.log(res)
-                  Swal.fire({
-                    title: "Utilizator șters!",
-                    text: "Acest utilizator nu mai există în baza de date",
-                    icon: "success"
-                });
-                })
-                refetch();
-        }
+      if (result.isConfirmed) {
+        axiosSecure.delete(`/users/${user._id}`)
+          .then(res => {
+            Swal.fire({
+              title: "Utilizator șters!",
+              text: "Acest utilizator nu mai există în baza de date",
+              icon: "success"
+            });
+            refetch();
+          });
+      }
     });
-}
+  }
 
   return (
     <div>
@@ -64,7 +61,7 @@ const Users = () => {
 
       {/* table */}
       <div>
-      <div className="overflow-x-auto">
+        <div className="overflow-x-auto">
           <table className="table table-zebra md:w-[870px]">
             {/* head */}
             <thead className="bg-orange text-white">
@@ -72,6 +69,7 @@ const Users = () => {
                 <th>#</th>
                 <th>Nume</th>
                 <th>Email</th>
+                <th>Telefon</th>
                 <th>Rol</th>
                 <th>Șterge</th>
               </tr>
@@ -82,6 +80,7 @@ const Users = () => {
                   <th>{index + 1}</th>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
+                  <td>{user.phoneNumber}</td> {/* Display phone number */}
                   <td>
                     {user.role === "admin" ? (
                       "Admin"

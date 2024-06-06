@@ -1,15 +1,22 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { useForm } from 'react-hook-form';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 const UserProfile = () => {
-  const { updateUserProfile, user } = useContext(AuthContext); // Assuming user context provides user details and updateUserProfile function
-  const { register, handleSubmit } = useForm();
+  const { updateUserProfile, user } = useContext(AuthContext);
+  const { register, handleSubmit, setValue } = useForm();
   const [selectedPhoto, setSelectedPhoto] = useState(user?.photoURL || null);
 
+  useEffect(() => {
+    if (user) {
+      setValue("name", user.displayName || "");
+      setValue("phoneNumber", user.phoneNumber || "");
+    }
+  }, [user, setValue]);
+
   const onSubmit = async (data) => {
-    const name = data.name;
+    const { name, phoneNumber } = data;
     const photoURL = selectedPhoto;
 
     if (!user?.email) {
@@ -18,17 +25,15 @@ const UserProfile = () => {
     }
 
     try {
-      // Update Firebase profile
       await updateUserProfile(name, photoURL);
 
-      // Update MongoDB profile
       const response = await fetch(`http://localhost:5000/users/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${localStorage.getItem('access_token')}`
         },
-        body: JSON.stringify({ email: user.email, name, photoURL }),
+        body: JSON.stringify({ email: user.email, name, phoneNumber, photoURL }),
       });
 
       if (response.ok) {
@@ -38,16 +43,16 @@ const UserProfile = () => {
           title: 'Modificări profil salvate cu succes',
           showConfirmButton: false,
           timer: 2000
-        })
+        });
       }
     } catch (error) {
       Swal.fire({
         position: 'center',
-        icon: 'success',
+        icon: 'error',
         title: 'Eroare la modificarea profilului',
         showConfirmButton: false,
         timer: 2000
-      })
+      });
     }
   };
 
@@ -66,8 +71,19 @@ const UserProfile = () => {
             <input
               type="text"
               {...register("name")}
-              placeholder="Your name"
-              defaultValue={user?.displayName || ""}
+              placeholder="nume"
+              className="input input-bordered"
+              required
+            />
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Număr de telefon</span>
+            </label>
+            <input
+              type="text"
+              {...register("phoneNumber")}
+              placeholder="număr de telefon"
               className="input input-bordered"
               required
             />
