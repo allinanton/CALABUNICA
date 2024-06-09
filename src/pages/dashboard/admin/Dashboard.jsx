@@ -3,6 +3,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
 import { FaBook, FaUsers } from "react-icons/fa";
+import LoadingSpinner from "../../../components/LoadingSpinner"; // Asigură-te că calea este corectă
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ const Dashboard = () => {
   const [watchId, setWatchId] = useState(null);
   const axiosSecure = useAxiosSecure();
 
-  const { data: stats = {} } = useQuery({
+  const { data: stats = {}, isLoading } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
       const res = await axiosSecure.get("/admin-stats");
@@ -65,6 +66,10 @@ const Dashboard = () => {
   const toggleTracking = () => {
     setTracking(!tracking);
   };
+
+  if (!user || isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="w-full md:w-[1080px] mx-auto px-4 ">
