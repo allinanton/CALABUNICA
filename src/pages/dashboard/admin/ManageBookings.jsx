@@ -94,7 +94,7 @@ const ManageBookings = () => {
   };
 
   return (
-    <div className="w-full md:w-[870px] mx-auto px-4 ">
+    <div className="w-full md:w-[870px] mx-auto px-4">
       <h2 className="text-2xl font-semibold my-4">
         Gestionare <span className="text-orange">Comenzi</span>
       </h2>
@@ -107,6 +107,7 @@ const ManageBookings = () => {
                 <th>#</th>
                 <th>Utilizator</th>
                 <th>Adresa</th>
+                <th>Număr de Telefon</th>
                 <th>Preț</th>
                 <th>Status</th>
                 <th>Acțiuni</th>
@@ -119,6 +120,7 @@ const ManageBookings = () => {
                   <td>{index + 1}</td>
                   <td>{item.email}</td>
                   <td>{item.address}</td>
+                  <td>{item.phoneNumber}</td> {/* Afișează numărul de telefon */}
                   <td>{item.price} Lei</td>
                   <td>{item.status}</td>
                   <td className="text-center">
@@ -168,11 +170,11 @@ const ManageBookings = () => {
           disabled={indexOfLastItem >= orders.length}
           className="btn btn-sm bg-orange text-white"
         >
-          Înainte  <FaArrowRight />
+          Înainte <FaArrowRight />
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 export default ManageBookings;

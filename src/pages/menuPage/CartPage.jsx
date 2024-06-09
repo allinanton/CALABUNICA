@@ -3,32 +3,41 @@ import useCart from "../../hooks/useCart";
 import { AuthContext } from "../../contexts/AuthProvider";
 import Swal from "sweetalert2";
 import { FaTrash } from "react-icons/fa";
-import { Link } from 'react-router-dom'
-import axios from "axios";
+import { Link } from 'react-router-dom';
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const CartPage = () => {
-
   const { user } = useContext(AuthContext);
   const [cart, refetch] = useCart();
   const [cartItems, setCartItems] = useState([]);
-  // console.log(cartItems)
+  const [userData, setUserData] = useState({});
+  const axiosSecure = useAxiosSecure(); 
 
-  // Calculate the total price for each item in the cart
+  useEffect(() => {
+    // Fetch user data from MongoDB
+    const getUserByEmail = async () => {
+      if (user && user.email) {
+        try {
+          const response = await axiosSecure.get(`/users/${user.email}`);
+          setUserData(response.data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    getUserByEmail();
+  }, [user, axiosSecure]);
+
   const calculateTotalPrice = (item) => {
     return item.price * item.quantity;
   };
-  // Handle quantity increase
+
   const handleIncrease = async (item) => {
     try {
-      const response = await fetch(`http://localhost:5000/carts/${item._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ quantity: item.quantity + 1 }),
-      });
+      const response = await axiosSecure.put(`/carts/${item._id}`, { quantity: item.quantity + 1 });
 
-      if (response.ok) {
+      if (response.status === 200) {
         const updatedCart = cartItems.map((cartItem) => {
           if (cartItem.id === item.id) {
             return {
@@ -47,22 +56,13 @@ const CartPage = () => {
       console.error("Error updating quantity:", error);
     }
   };
-  // Handle quantity decrease
+
   const handleDecrease = async (item) => {
     if (item.quantity > 1) {
       try {
-        const response = await fetch(
-          `http://localhost:5000/carts/${item._id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ quantity: item.quantity - 1 }),
-          }
-        );
+        const response = await axiosSecure.put(`/carts/${item._id}`, { quantity: item.quantity - 1 });
 
-        if (response.ok) {
+        if (response.status === 200) {
           const updatedCart = cartItems.map((cartItem) => {
             if (cartItem.id === item.id) {
               return {
@@ -83,20 +83,16 @@ const CartPage = () => {
     }
   };
 
- // Calculate the total quantity of products in the cart
- const totalQuantity = cart.reduce((total, item) => {
-  return total + item.quantity;
-}, 0);
-  // Calculate the cart subtotal
+  const totalQuantity = cart.reduce((total, item) => {
+    return total + item.quantity;
+  }, 0);
+
   const cartSubtotal = cart.reduce((total, item) => {
     return total + calculateTotalPrice(item);
   }, 0);
 
-  // Calculate the order total
   const orderTotal = cartSubtotal;
-  // console.log(orderTotal)
 
-  // delete an item
   const handleDelete = (item) => {
     Swal.fire({
       title: "Sunteți sigur?",
@@ -109,12 +105,13 @@ const CartPage = () => {
       cancelButtonText: "Anulează",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:5000/carts/${item._id}`).then(response => {
-          if (response) {
-            refetch();
-            Swal.fire("Eliminat!", "Produsul a fost eliminat din coș.", "success");
-          }
-        })
+        axiosSecure.delete(`/carts/${item._id}`)
+          .then(response => {
+            if (response.status === 200) {
+              refetch();
+              Swal.fire("Eliminat!", "Produsul a fost eliminat din coș.", "success");
+            }
+          })
           .catch(error => {
             console.error(error);
           });
@@ -124,10 +121,8 @@ const CartPage = () => {
 
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
-      {/* banner */}
       <div className={`bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%`}>
         <div className="py-28 flex flex-col items-center justify-center">
-          {/* content */}
           <div className=" text-center px-4 space-y-7">
             <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
               Produse Adăugate în<span className="text-orange"> Coșul de Cumpărături</span>
@@ -136,14 +131,11 @@ const CartPage = () => {
         </div>
       </div>
 
-      {/* cart table */}
-
-      {
-        (cart.length > 0) ? <div>
+      {cart.length > 0 ? (
+        <div>
           <div>
             <div className="overflow-x-auto">
               <table className="table">
-                {/* head */}
                 <thead className="bg-orange text-white rounded-sm">
                   <tr>
                     <th>#</th>
@@ -201,7 +193,6 @@ const CartPage = () => {
                     </tr>
                   ))}
                 </tbody>
-                {/* foot */}
               </table>
             </div>
           </div>
@@ -211,6 +202,7 @@ const CartPage = () => {
               <h3 className="text-lg font-semibold">Detalii</h3>
               <p>Nume: {user?.displayName || "None"}</p>
               <p>Email: {user?.email}</p>
+              <p>Număr de telefon: {userData?.phoneNumber || "None"}</p> {/* Afișează numărul de telefon */}
             </div>
             <div className="md:w-1/2 space-y-3">
               <h3 className="text-lg font-semibold">Detalii Coș</h3>
@@ -224,12 +216,13 @@ const CartPage = () => {
               </Link>
             </div>
           </div>
-        </div> : <div className="text-center mt-20">
+        </div>
+      ) : (
+        <div className="text-center mt-20">
           <p>Coșul este gol. Te rog adaugă produse.</p>
           <Link to="/menu"><button className="btn bg-orange text-white mt-3">Înapoi la Meniu</button></Link>
         </div>
-      }
-
+      )}
     </div>
   );
 };
