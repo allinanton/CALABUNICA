@@ -1,26 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
 import avatarImg from "/images/home/userphotos/1.jpg"
 import { useNavigate } from "react-router-dom";
-import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const Profile = ({ user }) => {
   const { logOut } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const checkAdmin = async () => {
-      try {
-        const response = await axiosSecure.get(`/users/admin/${user.email}`);
-        setIsAdmin(response.data.admin);
-      } catch (error) {
-        console.error("Error checking admin status:", error);
-      }
-    };
-    checkAdmin();
-  }, [user, axiosSecure]);
+  const navigate = useNavigate()
 
   // logout
   const handleLogout = () => {
@@ -63,11 +48,6 @@ const Profile = ({ user }) => {
             <li>
               <a href="/order">Comenzi</a>
             </li>
-            {isAdmin && (
-              <li>
-                <a href="/dashboard">Tablou de instrumente</a>
-              </li>
-            )}
             <li>
               <a onClick={handleLogout}>Logout</a>
             </li>

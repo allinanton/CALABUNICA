@@ -2,18 +2,32 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { Link } from 'react-router-dom';
 
 const UserProfile = () => {
   const { updateUserProfile, user } = useContext(AuthContext);
   const { register, handleSubmit, setValue } = useForm();
   const [selectedPhoto, setSelectedPhoto] = useState(user?.photoURL || null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     if (user) {
       setValue("name", user.displayName || "");
       setValue("phoneNumber", user.phoneNumber || "");
+      checkAdminStatus(); // Check admin status when component mounts
     }
   }, [user, setValue]);
+
+  const checkAdminStatus = async () => {
+    try {
+      const response = await axiosSecure.get(`/users/${user.email}`);
+      setIsAdmin(response.data.role === "admin");
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+    }
+  };
 
   const onSubmit = async (data) => {
     const { name, phoneNumber } = data;
@@ -105,9 +119,16 @@ const UserProfile = () => {
             </div>
           </div>
           <div className="form-control mt-6">
-            <input type='submit' value={"Salvați Modificările"} className="btn bg-orange text-white" />
+            <input type='submit' value={"Salvați Modificările"} className="btn bg-orange text-white w-full" />
           </div>
         </form>
+        {isAdmin && (
+          <div className="form-control mt-4 flex justify-center">
+            <Link to="/dashboard" className="btn bg-orange text-white">
+              Tablou de instrumente
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

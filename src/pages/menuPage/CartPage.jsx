@@ -5,16 +5,16 @@ import Swal from "sweetalert2";
 import { FaTrash } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const CartPage = () => {
   const { user } = useContext(AuthContext);
-  const [cart, refetch] = useCart();
+  const [cart, refetch, isLoading] = useCart();
   const [cartItems, setCartItems] = useState([]);
   const [userData, setUserData] = useState({});
-  const axiosSecure = useAxiosSecure(); 
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
-    // Fetch user data from MongoDB
     const getUserByEmail = async () => {
       if (user && user.email) {
         try {
@@ -83,16 +83,6 @@ const CartPage = () => {
     }
   };
 
-  const totalQuantity = cart.reduce((total, item) => {
-    return total + item.quantity;
-  }, 0);
-
-  const cartSubtotal = cart.reduce((total, item) => {
-    return total + calculateTotalPrice(item);
-  }, 0);
-
-  const orderTotal = cartSubtotal;
-
   const handleDelete = (item) => {
     Swal.fire({
       title: "Sunteți sigur?",
@@ -119,6 +109,20 @@ const CartPage = () => {
     });
   };
 
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  const totalQuantity = Array.isArray(cart) ? cart.reduce((total, item) => {
+    return total + item.quantity;
+  }, 0) : 0;
+
+  const cartSubtotal = Array.isArray(cart) ? cart.reduce((total, item) => {
+    return total + calculateTotalPrice(item);
+  }, 0) : 0;
+
+  const orderTotal = cartSubtotal;
+
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
       <div className={`bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%`}>
@@ -131,7 +135,7 @@ const CartPage = () => {
         </div>
       </div>
 
-      {cart.length > 0 ? (
+      {Array.isArray(cart) && cart.length > 0 ? (
         <div>
           <div>
             <div className="overflow-x-auto">
@@ -200,9 +204,9 @@ const CartPage = () => {
           <div className="flex flex-col md:flex-row justify-between items-start my-12 gap-8">
             <div className="md:w-1/2 space-y-3">
               <h3 className="text-lg font-semibold">Detalii</h3>
-              <p>Nume: {user?.displayName || "None"}</p>
+              <p>Nume: {user?.displayName || "User"}</p>
               <p>Email: {user?.email}</p>
-              <p>Număr de telefon: {userData?.phoneNumber || "None"}</p> {/* Afișează numărul de telefon */}
+              <p>Număr de telefon: {userData?.phoneNumber || "Număr lipsă"}</p> {/* Afișează numărul de telefon */}
             </div>
             <div className="md:w-1/2 space-y-3">
               <h3 className="text-lg font-semibold">Detalii Coș</h3>

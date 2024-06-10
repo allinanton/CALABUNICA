@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {FaGoogle } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../contexts/AuthProvider";
 import useAxiosPublic from "../hooks/useAxiosPublic";
@@ -34,12 +34,12 @@ const Login = () => {
         const userInfo = {
           email: result.user?.email,
           name: result.user?.displayName
-      }
-      axiosPublic.post('/users', userInfo)
-      .then(res =>{
-          console.log(res.data);
-          navigate('/');
-      })
+        }
+        axiosPublic.post('/users', userInfo)
+          .then(res => {
+            console.log(res.data);
+            navigate('/');
+          })
         // console.log(user);
         Swal.fire({
           position: "center",
@@ -55,102 +55,105 @@ const Login = () => {
         const errorMessage = error.message;
         seterrorMessage("Vă rog introduceți o parolă și email valide!");
       });
-      reset()
+    reset()
 
   };
 
   // login with google
   const handleRegister = () => {
-    signUpWithGmail().then(result =>{
-      console.log(result.user);
+    signUpWithGmail().then(result => {
       const userInfo = {
-          email: result.user?.email,
-          name: result.user?.displayName
+        email: result.user?.email,
+        name: result.user?.displayName
       }
       axiosPublic.post('/users', userInfo)
-      .then(res =>{
-          console.log(res.data);
-          alert("Autentificare reușită!");
-        
+
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Autentificare reușită!",
+        showConfirmButton: false,
+        timer: 1500,
+
       })
       navigate('/');
-  })
+    })
   };
   return (
     <div className="max-w-md bg-white shadow w-full mx-auto flex items-center justify-center my-20">
-    <div className="mb-5">
-    <form
-            className="card-body"
-            method="dialog"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <h3 className="font-bold text-lg">Autentificare!</h3>
+      <div className="mb-5">
+        <form
+          className="card-body"
+          method="dialog"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <h3 className="font-bold text-lg">Autentificare!</h3>
 
-            {/* email */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Adresă de email</span>
-              </label>
-              <input
-                type="email"
-                placeholder="email"
-                className="input input-bordered"
-                {...register("email")}
-              />
-            </div>
+          {/* email */}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Adresă de email</span>
+            </label>
+            <input
+              type="email"
+              placeholder="email"
+              className="input input-bordered"
+              {...register("email")}
+            />
+          </div>
 
-            {/* password */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Parolă</span>
-              </label>
-              <input
-                type="password"
-                placeholder="parolă"
-                className="input input-bordered"
-                {...register("password", { required: true })}
-              />
-              <label className="label">
-                <a href="#" className="label-text-alt link link-hover mt-2">
-                  Ați uitat parola?
-                </a>
-              </label>
-            </div>
+          {/* password */}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Parolă</span>
+            </label>
+            <input
+              type="password"
+              placeholder="parolă"
+              className="input input-bordered"
+              {...register("password", { required: true })}
+            />
+            <label className="label">
+              <a href="#" className="label-text-alt link link-hover mt-2">
+                Ați uitat parola?
+              </a>
+            </label>
+          </div>
 
-            {/* show errors */}
-            {errorMessage ? (
-              <p className="text-red text-xs italic">
-                Vă rog introduceți o parolă și email valide.
-              </p>
-            ) : (
-              ""
-            )}
-
-            {/* submit btn */}
-            <div className="form-control mt-4">
-              <input
-                type="submit"
-                className="btn bg-orange text-white"
-                value="Autentificare"
-              />
-            </div>
-
-    
-
-            <p className="text-center my-2">
-              Nu aveți un cont?
-              <Link to="/signup" className="underline text-red ml-1">
-                Creeați un cont nou
-              </Link>
+          {/* show errors */}
+          {errorMessage ? (
+            <p className="text-red text-xs italic">
+              Vă rog introduceți o parolă și email valide.
             </p>
-          </form>
-    <div className="text-center space-x-3">
-        <button onClick={handleRegister} className="btn btn-circle hover:bg-orange hover:text-white">
-          <FaGoogle />
-        </button>
+          ) : (
+            ""
+          )}
+
+          {/* submit btn */}
+          <div className="form-control mt-4">
+            <input
+              type="submit"
+              className="btn bg-orange text-white"
+              value="Autentificare"
+            />
+          </div>
+
+
+
+          <p className="text-center my-2">
+            Nu aveți un cont?
+            <Link to="/signup" className="underline text-red ml-1">
+              Creeați un cont nou
+            </Link>
+          </p>
+        </form>
+        <div className="text-center space-x-3">
+          <button onClick={handleRegister} className="btn btn-circle hover:bg-orange hover:text-white">
+            <FaGoogle />
+          </button>
+        </div>
       </div>
     </div>
-  </div>
   )
 }
 

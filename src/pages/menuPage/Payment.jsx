@@ -13,6 +13,7 @@ const Payment = () => {
   const [address, setAddress] = useState(null);
   const [locationString, setLocationString] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(""); // State pentru numărul de telefon
+  const [locationError, setLocationError] = useState(false); // State pentru eroare de locație
   const [cart] = useCart();
 
   const totalQuantity = cart.reduce((total, item) => {
@@ -47,13 +48,27 @@ const Payment = () => {
           setLocation({ latitude, longitude });
           getAddressFromLatLng(latitude, longitude);
           setLocationString(`${latitude},${longitude}`);
+          setLocationError(false);
         },
         (error) => {
           console.error("Error getting location:", error);
+          if (error.code === error.PERMISSION_DENIED) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Permisiune locație refuzată',
+              text: 'Permisiunea pentru locație a fost refuzată. Vă rugăm să permiteți accesul la locație în setările browserului pentru a continua.',
+              showCancelButton: true,
+              confirmButtonText: 'Reîncercați locația',
+              cancelButtonText: 'Închide'
+            });
+          } else {
+            setLocationError(true);
+          }
         }
       );
     } else {
       console.error("Geolocation is not supported by this browser.");
+      setLocationError(true);
     }
   };
 
@@ -72,11 +87,23 @@ const Payment = () => {
   };
 
   const handleSubmitOrder = async () => {
-    if (!location || !address || !phoneNumber) {
-      console.error("Location, address or phone number not available.");
+    if (!phoneNumber) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Lipsă informații',
+        text: 'Numărul de telefon lipsește. Vă rugăm să-l completați pentru a continua',
+        showCancelButton: true,
+        confirmButtonText: 'Mergi la profil',
+        cancelButtonText: 'Închide',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/update-profile'); // Redirecționează către pagina de profil
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          getLocation(); // Reîncearcă obținerea locației
+        }
+      });
       return;
     }
-
     const orderInfo = {
       email: user.email,
       price: totalPrice,
