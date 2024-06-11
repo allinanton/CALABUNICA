@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
-import { Link } from "react-router-dom";
-import Map from "../../../components/Map"; // Assuming you have a Map component
+import Map from "../../../components/Map";
+import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
+import app from '../../../firebase/firebase.config';
 
 const Order = () => {
   const { user, loading } = useAuth();
@@ -12,7 +13,7 @@ const Order = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:5000/payments?email=${user?.email}`,
+        `https://calabunica-server.onrender.com/payments?email=${user?.email}`,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -25,6 +26,26 @@ const Order = () => {
 
   // State to track the index of the currently visible map
   const [visibleMapIndex, setVisibleMapIndex] = useState(null);
+  const [courierLocation, setCourierLocation] = useState(null);
+  const db = getFirestore(app);
+
+  useEffect(() => {
+    const locationDoc = doc(db, 'locations', 'alinanton294@gmail.com'); // Use your specific document ID
+    const unsubscribe = onSnapshot(locationDoc, (doc) => {
+      if (doc.exists()) {
+        setCourierLocation(doc.data().location); // Adjusted to access location field
+        console.log("Courier location data:", doc.data().location);
+      } else {
+        console.log("No such document!");
+      }
+    }, (error) => {
+      console.error("Error fetching location data:", error);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [db]);
 
   // date format
   const formatDate = (createdAt) => {
@@ -101,13 +122,19 @@ const Order = () => {
                         <tr>
                           <td colSpan="6" className="p-0">
                             {/* Render map component for the order */}
-                            <Map latlong={item.latlong} />
+                            {courierLocation ? (
+                              <Map
+                                userLatLong={item.latlong}
+                                courierLatLong={`${courierLocation.latitude},${courierLocation.longitude}`}
+                              />
+                            ) : (
+                              <p>Loading courier location...</p>
+                            )}
                           </td>
                         </tr>
                       )}
                     </React.Fragment>
                   ))}
-
                 </tbody>
                 {/* foot */}
               </table>

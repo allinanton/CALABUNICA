@@ -8,13 +8,12 @@ import Swal from "sweetalert2";
 
 const Modal = () => {
   const [errorMessage, seterrorMessage] = useState("");
-  const { signUpWithGmail, login } = useContext(AuthContext);
+  const { signUpWithGmail, login, resetPassword } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
 
   // modal close button
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen] = useState(true);
   const closeModal = () => {
-    setIsModalOpen(false);
     document.getElementById("my_modal_5").close();
   };
 
@@ -99,6 +98,53 @@ const Modal = () => {
     });
   };
 
+
+  const handleForgotPassword = async () => {
+    closeModal();  // Close the modal
+
+    const { value: email } = await Swal.fire({
+      title: 'Introduceți adresa de email',
+      input: 'email',
+      inputPlaceholder: 'Introduceți adresa de email',
+      showCancelButton: true,
+      confirmButtonText: 'Trimiteți',
+    });
+
+    if (email) {
+      resetPassword(email)
+        .then(() => {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Emailul de resetare a parolei a fost trimis!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => {
+          if (error.code === 'auth/user-not-found') {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Emailul nu a fost găsit!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Eroare la trimiterea emailului!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        });
+    }
+  };
+
+
+
   return (
     <dialog id="my_modal_5" className={`modal ${isModalOpen ? 'modal-middle sm:modal-middle' : 'hidden'}`}>
       <div className="modal-box">
@@ -135,7 +181,10 @@ const Modal = () => {
                 {...register("password", { required: true })}
               />
               <label className="label">
-                <a href="#" className="label-text-alt link link-hover mt-2">
+                <a
+                  className="label-text-alt link link-hover mt-2"
+                  onClick={handleForgotPassword}
+                >
                   Ați uitat parola?
                 </a>
               </label>

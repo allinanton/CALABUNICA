@@ -41,7 +41,7 @@ const UserProfile = () => {
     try {
       await updateUserProfile(name, photoURL);
 
-      const response = await fetch(`http://localhost:5000/users/profile`, {
+      const response = await fetch(`https://calabunica-server.onrender.com/users/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 const Login = () => {
   const axiosPublic = useAxiosPublic();
   const [errorMessage, seterrorMessage] = useState("");
-  const { signUpWithGmail, login } = useContext(AuthContext);
+  const { signUpWithGmail, login, resetPassword } = useContext(AuthContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,7 +19,8 @@ const Login = () => {
   //react hook form
   const {
     register,
-    handleSubmit, reset,
+    handleSubmit, 
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -37,7 +38,6 @@ const Login = () => {
         }
         axiosPublic.post('/users', userInfo)
           .then(res => {
-            console.log(res.data);
             navigate('/');
           })
         // console.log(user);
@@ -79,6 +79,50 @@ const Login = () => {
       navigate('/');
     })
   };
+
+  const handleForgotPassword = async () => {
+    const { value: email } = await Swal.fire({
+      title: 'Introduceți adresa de email',
+      input: 'email',
+      inputLabel: 'Adresa de email',
+      inputPlaceholder: 'Introduceți adresa de email',
+      showCancelButton: true,
+      confirmButtonText: 'Trimiteți',
+    });
+
+    if (email) {
+      resetPassword(email)
+        .then(() => {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Emailul de resetare a parolei a fost trimis!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => {
+          if (error.code === 'auth/user-not-found') {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Emailul nu a fost găsit!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: 'Eroare la trimiterea emailului!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        });
+    }
+  };
+  
   return (
     <div className="max-w-md bg-white shadow w-full mx-auto flex items-center justify-center my-20">
       <div className="mb-5">
@@ -113,8 +157,11 @@ const Login = () => {
               className="input input-bordered"
               {...register("password", { required: true })}
             />
-            <label className="label">
-              <a href="#" className="label-text-alt link link-hover mt-2">
+             <label className="label">
+              <a
+                className="label-text-alt link link-hover mt-2"
+                onClick={handleForgotPassword}
+              >
                 Ați uitat parola?
               </a>
             </label>

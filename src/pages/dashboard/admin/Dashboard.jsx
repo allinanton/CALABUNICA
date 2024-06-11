@@ -3,16 +3,12 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
 import { FaBook, FaUsers } from "react-icons/fa";
-import LoadingSpinner from "../../../components/LoadingSpinner"; // Asigură-te că calea este corectă
+import LoadingSpinner from "../../../components/LoadingSpinner"; // Ensure the path is correct
 
 const Dashboard = () => {
-  const { user } = useAuth();
-  const [tracking, setTracking] = useState(
-    localStorage.getItem("tracking") === "true"
-  );
-  const [location, setLocation] = useState(
-    JSON.parse(localStorage.getItem("location")) || null
-  );
+  const { user, updateLocation } = useAuth();
+  const [tracking, setTracking] = useState(localStorage.getItem("tracking") === "true");
+  const [location, setLocation] = useState(JSON.parse(localStorage.getItem("location")) || null);
   const [watchId, setWatchId] = useState(null);
   const axiosSecure = useAxiosSecure();
 
@@ -25,32 +21,15 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    if (tracking) {
-      startTracking();
-    } else if (watchId) {
-      navigator.geolocation.clearWatch(watchId);
-      setWatchId(null);
-    }
-    return () => {
-      if (watchId) {
-        navigator.geolocation.clearWatch(watchId);
-      }
-    };
-  }, [tracking]);
-
-  useEffect(() => {
-    // Store tracking state and location in local storage
-    localStorage.setItem("tracking", tracking);
-    localStorage.setItem("location", JSON.stringify(location));
-  }, [tracking, location]);
-
-  const startTracking = () => {
-    if (navigator.geolocation) {
+    if (tracking && navigator.geolocation) {
       const id = navigator.geolocation.watchPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          console.log("Position updated:", { latitude, longitude });
-          setLocation({ latitude, longitude });
+          const newLocation = { latitude, longitude };
+          setLocation(newLocation);
+          if (updateLocation) {
+            updateLocation(newLocation); // Update location in Firestore
+          }
         },
         (error) => {
           console.error("Error getting location:", error.message);
@@ -58,10 +37,17 @@ const Dashboard = () => {
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
       setWatchId(id);
-    } else {
-      console.error("Geolocation is not supported by this browser.");
+      return () => navigator.geolocation.clearWatch(id); // Cleanup on unmount or dependency change
+    } else if (watchId) {
+      navigator.geolocation.clearWatch(watchId);
+      setWatchId(null);
     }
-  };
+  }, [tracking]); // Removed watchId and updateLocation from dependencies to avoid re-triggering
+
+  useEffect(() => {
+    localStorage.setItem("tracking", tracking);
+    localStorage.setItem("location", JSON.stringify(location));
+  }, [tracking, location]);
 
   const toggleTracking = () => {
     setTracking(!tracking);
@@ -72,10 +58,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-full md:w-[1080px] mx-auto px-4 ">
-      <h2 className="text-3xl font-semibold my-4">
-        Salut, {user.displayName}
-      </h2>
+    <div className="w-full md:w-[1080px] mx-auto px-4">
+      <h2 className="text-3xl font-semibold my-4">Salut, {user.displayName}</h2>
       <div className="stats shadow flex flex-col md:flex-row">
         <div className="stat bg-[#ff7f66]">
           <div className="stat-figure text-secondary">
@@ -116,10 +100,7 @@ const Dashboard = () => {
           {tracking ? "Stop Tracking" : "Start Tracking"}
         </button>
         {location && (
-          <p>
-            Current Location: Latitude {location.latitude}, Longitude{" "}
-            {location.longitude}
-          </p>
+          <p>Current Location: Latitude {location.latitude}, Longitude {location.longitude}</p>
         )}
       </div>
     </div>
