@@ -46,22 +46,25 @@ const Navbar = () => {
           Meniu
         </a>
       </li>
-      <li tabIndex={0}>
-        <details>
-          <summary className={`text-2xl`}>Servicii</summary>
-          <ul className={`p-2`}>
-            <li>
-              <a className={`text`}>Mâncare la Oală</a>
-            </li>
-            <li>
-              <a className={`text`}>Organizare Evenimente</a>
-            </li>
-            <li>
-              <a className={`text`}>Catering Evenimente</a>
-            </li>
-          </ul>
-        </details>
-      </li>
+      {/* 
+  <li tabIndex={0}>
+    <details>
+      <summary className={`text-2xl`}>Servicii</summary>
+      <ul className={`p-2`}>
+        <li>
+          <a className={`text`}>Mâncare la Oală</a>
+        </li>
+        <li>
+          <a className={`text`}>Organizare Evenimente</a>
+        </li>
+        <li>
+          <a className={`text`}>Catering Evenimente</a>
+        </li>
+      </ul>
+    </details>
+  </li>
+*/}
+
     </>
   );
   return (

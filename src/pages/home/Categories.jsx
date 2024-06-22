@@ -10,7 +10,7 @@ const categoryItems = [
     { id: 6, title: "Desert", image: "/images/home/category/img6.png" }
 ]
 
-const Catagories = () => {
+const Categories = () => {
     return (
         <div className={`max-w-screen-3xl container mx-auto xl:px-40 px-4 py-16`}>
             <div className='text-center'>
@@ -35,4 +35,4 @@ const Catagories = () => {
     )
 }
 
-export default Catagories
+export default Categories

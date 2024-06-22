@@ -15,8 +15,13 @@ const Footer = () => {
           <div className="md:flex md:flex-wrap">
             <div className="xl:w-6/12 md:w-7/12 mb-6 lg:mb-0 md:pr-3">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1405.5883308375244!2d26.01534635741877!3d45.20376052368809!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b3a57302029bfd%3A0x7fa7e87311dabde7!2sParcul%20Industrial%2C%20Strada%20Berevoie%C8%99ti%2077-79%2C%20V%C4%83lenii%20de%20Munte%20106400!5e0!3m2!1sro!2sro!4v1709676854390!5m2!1sro!2sro"
-                className="h-80 w-full border-0 rounded-lg shadow-lg" allowFullScreen="" loading="lazy"></iframe>
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3363.970248069968!2d26.012253076618887!3d45.202487750862076!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b3a500651c6c3d%3A0x9201ac5b6fec855!2sCALABUNICA!5e1!3m2!1sro!2sro&t=k!4v1718802935942!5m2!1sro!2sro"
+                width="700"
+                height="350"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
             </div>
             <div className="xl:w-6/12 md:w-5/12 md:pl-3">
               <div className="grid xl:grid-cols-2 xl:grid-rows-2 xl:gap-x-4 md:gap-x-6">
