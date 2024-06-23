@@ -6,6 +6,7 @@ import { AuthContext } from "../contexts/AuthProvider";
 import Profile from "./Profile";
 import { Link } from "react-router-dom";
 import useCart from "../hooks/useCart";
+import moment from "moment-timezone";
 
 const Navbar = () => {
   const [isSticky, setSticky] = useState(false);
@@ -34,6 +35,9 @@ const Navbar = () => {
     };
   }, []);
 
+  const currentHour = moment.tz("Europe/Bucharest").hours();
+  const isClosed = currentHour < 8 || currentHour >= 15;
+
   const navItems = (
     <>
       <li>
@@ -46,39 +50,23 @@ const Navbar = () => {
           Meniu
         </a>
       </li>
-      {/* 
-  <li tabIndex={0}>
-    <details>
-      <summary className={`text-2xl`}>Servicii</summary>
-      <ul className={`p-2`}>
-        <li>
-          <a className={`text`}>Mâncare la Oală</a>
-        </li>
-        <li>
-          <a className={`text`}>Organizare Evenimente</a>
-        </li>
-        <li>
-          <a className={`text`}>Catering Evenimente</a>
-        </li>
-      </ul>
-    </details>
-  </li>
-*/}
-
     </>
   );
+
   return (
     <header
       className={`bg-gradient-to-r from-orange from-10% max-w-screen-2xl container mx-auto fixed top-0 left-0 right-0 transition-all duration-1000 ease-in-out rounded-lg`}
     >
       <div
-        className={`navbar xl:px-24 ${isSticky ? "shadow-md bg-orange-400 transition-all duration-1000 ease-in-out text-black rounded-lg"
-          : "bg-gradient-to-r from-orange-400 to-orange-100 via-orange-400 transition-all duration-1000 ease-in-out rounded-lg"}`}
+        className={`navbar xl:px-24 ${
+          isSticky
+            ? "shadow-md bg-orange-400 transition-all duration-1000 ease-in-out text-black rounded-lg"
+            : "bg-gradient-to-r from-orange-400 to-orange-100 via-orange-400 transition-all duration-1000 ease-in-out rounded-lg"
+        }`}
       >
         <div className="navbar-start">
           <div className="dropdown justify-between">
-            <label onClick={toggleMenu} tabIndex={0} className="btn btn-ghost lg:hidden" >
-            </label>
+            <label onClick={toggleMenu} tabIndex={0} className="btn btn-ghost lg:hidden"></label>
             <ul
               tabIndex={0}
               className={`menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-64 space-y-3  `}
@@ -90,16 +78,12 @@ const Navbar = () => {
           <a href="/">
             <img src={logo} alt="" className="w-24 h-24 rounded-full" />
           </a>
-
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{navItems}</ul>
         </div>
         <div className="navbar-end ">
-
-
-          {/* Render shopping cart button if user is logged in */}
-          {user && (
+          {!isClosed && user && (
             <Link to="/cart-page">
               <label
                 tabIndex={0}
@@ -126,14 +110,15 @@ const Navbar = () => {
             </Link>
           )}
 
-          {/* Render login button if user is not logged in */}
           {!user && (
-            <button onClick={() => document.getElementById('my_modal_5').showModal()} className="btn flex items-center gap-2 rounded-full px-6 bg-orange text-white">
+            <button
+              onClick={() => document.getElementById("my_modal_5").showModal()}
+              className="btn flex items-center gap-2 rounded-full px-6 bg-orange text-white"
+            >
               <FaRegUser /> Login
             </button>
           )}
 
-          {/* Render profile if user is logged in */}
           {user && <Profile user={user} />}
 
           <Modal />

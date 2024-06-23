@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Cards from "../../components/Cards";
 import { FaFilter } from "react-icons/fa";
+import moment from "moment-timezone";
 
 const Menu = () => {
-
   const [menu, setMenu] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -26,8 +26,6 @@ const Menu = () => {
 
     fetchData();
   }, []);
-
-  // console.log(menu)
 
   const filterItems = (category) => {
     const filtered =
@@ -74,7 +72,6 @@ const Menu = () => {
     setCurrentPage(1);
   };
 
-  //   console.log(filteredItems);
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -82,6 +79,8 @@ const Menu = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const currentHour = moment.tz("Europe/Bucharest").hours();
+  const isClosed = currentHour < 8 || currentHour >= 15;
 
   return (
     <div>
@@ -91,12 +90,11 @@ const Menu = () => {
           {/* content */}
           <div className=" text-center px-4 space-y-7">
             <h2 className="md:text-6xl text-4xl font-bold md:leading-snug leading-snug">
-            Pasiunea pentru Gustul Autentic al <span className="text-orange">Mâncărurilor Tradiționale</span>
+              Pasiunea pentru Gustul Autentic al <span className="text-orange">Mâncărurilor Tradiționale</span>
             </h2>
             <p className="text-[#4A4A4A]  text-xl md:w-4/5 mx-auto">
               Descoperiți delicii autentice care vă vor încânta papilele gustative la fiecare eveniment. Oferim servicii de catering de înaltă calitate pentru a aduce gustul autentic al mâncărurilor tradiționale la ușa dvs.
             </p>
-
           </div>
         </div>
       </div>
@@ -104,7 +102,6 @@ const Menu = () => {
       {/* menu shop  */}
       <div className="section-container">
         <div className="flex flex-col md:flex-row flex-wrap md:justify-between items-center space-y-3 mb-8">
-
           {/* all category buttons */}
           <div className="flex flex-row justify-start md:items-center md:gap-8 gap-4  flex-wrap">
             <button
@@ -172,26 +169,38 @@ const Menu = () => {
         </div>
 
         {/* product card */}
-        <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 ">
-          {currentItems.map((item, index) => (
-            <Cards key={index} item={item} />
-          ))}
-        </div>
+        {isClosed ? (
+          <div className="text-center my-10">
+            <h2 className="text-2xl font-bold">Restaurantul este închis</h2>
+            <p className="mt-4 text-gray-500">
+              Comenzile pot fi plasate între orele 8:00 și 15:00. Vă mulțumim pentru înțelegere!
+            </p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 ">
+            {currentItems.map((item, index) => (
+              <Cards key={index} item={item} />
+            ))}
+          </div>
+        )}
+
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center my-8 flex-wrap gap-2">
-        {Array.from({ length: Math.ceil(filteredItems.length / itemsPerPage) }).map((_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => paginate(index + 1)}
-            className={`mx-1 px-3 py-1 rounded-full ${currentPage === index + 1 ? "bg-orange text-white" : "bg-gray-200"
-              } `}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      {!isClosed && (
+        <div className="flex justify-center my-8 flex-wrap gap-2">
+          {Array.from({ length: Math.ceil(filteredItems.length / itemsPerPage) }).map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => paginate(index + 1)}
+              className={`mx-1 px-3 py-1 rounded-full ${currentPage === index + 1 ? "bg-orange text-white" : "bg-gray-200"
+                } `}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
