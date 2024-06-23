@@ -77,6 +77,20 @@ const Footer = () => {
                     </div>
                   </div>
                 </div>
+                <div className="mb-10 md:mb-12">
+                  <div className="flex items-start">
+                    <div className="shrink-0">
+                      <div className="p-4 bg-orange rounded-md shadow-md w-14 h-14 flex items-center justify-center">
+                      <svg fill="#ffffff" height="200px" width="200px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M256,0C114.842,0,0,114.842,0,256s114.842,256,256,256s256-114.842,256-256S397.158,0,256,0z M374.821,283.546H256 c-15.148,0-27.429-12.283-27.429-27.429V137.295c0-15.148,12.281-27.429,27.429-27.429s27.429,12.281,27.429,27.429v91.394h91.392 c15.148,0,27.429,12.279,27.429,27.429C402.249,271.263,389.968,283.546,374.821,283.546z"></path> </g> </g> </g></svg>
+                      </div>
+                    </div>
+                    <div className="grow ml-4">
+                      <p className="font-bold mb-1">Program</p>
+                      <p className="text-gray-500">Luni-Sâmbătă: 08:00 - 15:00 </p>
+
+                    </div>
+                  </div>
+                </div>
 
               </div>
             </div>

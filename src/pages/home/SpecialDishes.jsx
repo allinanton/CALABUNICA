@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Cards from "../../components/Cards";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
+import moment from "moment-timezone";
 
 const SampleNextArrow = (props) => {
   const { className, style, onClick } = props;
@@ -36,7 +37,6 @@ const SpecialDishes = () => {
   const slider = React.useRef(null);
 
   useEffect(() => {
-    // Fetch data from the backend
     const fetchData = async () => {
       try {
         const response = await fetch("https://calabunica-server.onrender.com/menu");
@@ -49,6 +49,10 @@ const SpecialDishes = () => {
 
     fetchData();
   }, []);
+
+  const currentHour = moment.tz("Europe/Bucharest").hours();
+  const isClosed = currentHour < 8 || currentHour >= 15;
+
 
   const settings = {
     dots: true,
@@ -107,11 +111,18 @@ const SpecialDishes = () => {
           <FaAngleRight className=" h-8 w-8 p-1" />
         </button>
       </div>
-      <Slider ref={slider} {...settings} className="overflow-hidden mt-10 space-x-5">
-        {recipes.map((item, i) => (
-          <Cards item={item} key={i} />
-        ))}
-      </Slider>
+      {isClosed ? (
+        <div className="text-center my-10">
+          <h2 className="text-2xl font-bold">Restaurantul este închis</h2>
+          <p className="mt-4 text-gray-500">Comenzile pot fi plasate între orele 8:00 și 15:00. Vă mulțumim pentru înțelegere!</p>
+        </div>
+      ) : (
+        <Slider ref={slider} {...settings} className="overflow-hidden mt-10 space-x-5">
+          {recipes.map((item, i) => (
+            <Cards item={item} key={i} />
+          ))}
+        </Slider>
+      )}
     </div>
   );
 };
