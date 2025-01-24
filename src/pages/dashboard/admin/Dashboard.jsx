@@ -34,7 +34,7 @@ const Dashboard = () => {
         (error) => {
           console.error("Error getting location:", error.message);
         },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
       );
       setWatchId(id);
       return () => navigator.geolocation.clearWatch(id); // Cleanup on unmount or dependency change
